@@ -44,6 +44,13 @@ steps:
   - 'azzurra-makeup-artist-fe/' # Percorso al Dockerfile del frontend
   dir: '.' # Il contesto di build è la radice del monorepo
 
+# NUOVO STEP: 3.5. Push esplicito dell'immagine Docker del Frontend
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'push-frontend'
+  args:
+  - 'push'
+  - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend'
+
 # 4. Deploy del Frontend su Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   id: 'deploy-frontend'
@@ -82,6 +89,6 @@ substitutions:
   _CLOUDINARY_API_SECRET: 'Ejnkvn9VPh1V5zZQALk9_dluyS0' # Idealmente da Secret Manager
   _BACKEND_API_KEY: 'azzu-best-makeup-artist-241217dic' # Idealmente da Secret Manager
 
-# NUOVA SEZIONE: Opzioni di build per la gestione dei loggg
+# Opzioni di build per la gestione dei log
 options:
   logging: CLOUD_LOGGING_ONLY # Invia i log solo a Cloud Logging
