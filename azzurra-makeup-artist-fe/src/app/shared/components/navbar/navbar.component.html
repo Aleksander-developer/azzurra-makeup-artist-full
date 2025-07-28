@@ -1,0 +1,64 @@
+<!-- src/app/shared/components/navbar/navbar.component.html -->
+<mat-toolbar color="primary" class="toolbar-custom">
+
+  <!-- Sezione sinistra (solo desktop) -->
+  <div class="nav-links-container desktop-links">
+    <a mat-button routerLink="/home" i18n-aria-label="@@navHomeAria" i18n="@@navHome">Home</a>
+    <a mat-button routerLink="/trucco-sposa" i18n-aria-label="@@navBrideMakeupAria" i18n="@@navBrideMakeup">Trucco Sposa</a>
+    <a mat-button routerLink="/portfolio" i18n-aria-label="@@navPortfolioAria" i18n="@@navPortfolio">Portfolio</a>
+    <!-- RIMOSSO: <a mat-button *ngIf="isLoggedIn" routerLink="/admin/portfolio-manager" aria-label="Admin Portfolio">Admin Portfolio</a> -->
+  </div>
+
+  <!-- Logo centrale -->
+  <a routerLink="/home" class="brand-link" i18n-aria-label="@@navBrandAria">
+    Azzurra Angius
+  </a>
+
+  <!-- Sezione destra (solo desktop) -->
+  <div class="nav-links-container desktop-links">
+    <a mat-button routerLink="/servizi" i18n-aria-label="@@navServicesAria" i18n="@@navServices">Servizi</a>
+    <a mat-button routerLink="/contatti" i18n-aria-label="@@navContactsAria" i18n="@@navContacts">Contatti</a>
+    <a mat-button routerLink="/chi-sono" i18n-aria-label="@@navAboutMeAria" i18n="@@navAboutMe">Chi Sono</a>
+
+    <a mat-stroked-button color="accent" routerLink="/login" i18n-aria-label="@@navLoginAria" i18n="@@navLogin">Login</a>
+
+
+    <!-- Selettore Lingua per Desktop (con testo fisso) -->
+    <div class="language-selector desktop-lang-selector">
+      <button mat-icon-button (click)="changeLanguage('it')" i18n-aria-label="@@navChangeLangItAria">
+        <img src="assets/flags/it.png" alt="Bandiera Italiana" class="flag-icon">
+      </button>
+      <button mat-icon-button (click)="changeLanguage('en')" i18n-aria-label="@@navChangeLangEnAria">
+        <img src="assets/flags/en.png" alt="English Flag" class="flag-icon">
+      </button>
+    </div>
+  </div>
+
+  <!-- Bottone menu (solo mobile) -->
+  <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button" i18n-aria-label="@@navOpenMenuAria">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+</mat-toolbar>
+
+<!-- Menu mobile -->
+<mat-menu #menu="matMenu">
+  <button mat-menu-item routerLink="/home" i18n-aria-label="@@navHomeAriaMobile" i18n="@@navHomeMobile">Home</button>
+  <button mat-menu-item routerLink="/trucco-sposa" i18n-aria-label="@@navBrideMakeupAriaMobile" i18n="@@navBrideMakeupMobile">Trucco Sposa</button>
+  <button mat-menu-item routerLink="/portfolio" i18n-aria-label="@@navPortfolioAriaMobile" i18n="@@navPortfolioMobile">Portfolio</button>
+  <button mat-menu-item routerLink="/servizi" i18n-aria-label="@@navServicesAriaMobile" i18n="@@navServicesMobile">Servizi</button>
+  <button mat-menu-item routerLink="/contatti" i18n-aria-label="@@navContactsAriaMobile" i18n="@@navContactsMobile">Contatti</button>
+  <button mat-menu-item routerLink="/chi-sono" i18n-aria-label="@@navAboutMeAriaMobile" i18n="@@navAboutMeMobile">Chi Sono</button>
+  <button mat-menu-item routerLink="/login" i18n-aria-label="@@navLoginAriaMobile" i18n="@@navLoginMobile">Login</button>
+
+  <!-- Selettore Lingua per Mobile (nel menu, con testo fisso) -->
+  <div class="language-selector mobile-lang-selector">
+    <button mat-menu-item (click)="changeLanguage('it')" i18n-aria-label="@@navChangeLangItAriaMobile">
+      <img src="assets/flags/it.png" alt="Bandiera Italiana" class="flag-icon-menu">
+    </button>
+    <button mat-menu-item (click)="changeLanguage('en')" i18n-aria-label="@@navChangeLangEnAriaMobile">
+      <img src="assets/flags/en.png" alt="English Flag" class="flag-icon-menu">
+    </button>
+  </div>
+</mat-menu>
+

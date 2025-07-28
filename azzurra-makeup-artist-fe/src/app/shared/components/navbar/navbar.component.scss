@@ -1,0 +1,167 @@
+    /* src/app/shared/components/navbar/navbar.component.scss */
+
+    // Importa le variabili globali dal tuo file _variables.scss usando @use
+    @use '../../../../styles/variables' as vars;
+    @use '../../../../styles/mixins' as mixins;
+
+    // Variabili specifiche della navbar (se non sono globali)
+    $brand-link-color: vars.$color-white; // Usa il tuo bianco
+
+    .toolbar-custom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      // --- NUOVI STILI PER LO SFONDO CON IMMAGINE ---
+      background-image: url('../../../../assets/sfondo.png'); // Percorso alla tua immagine
+      background-size: 150px auto; // Rendi l'immagine piccola (es. 150px di larghezza, altezza automatica)
+      background-repeat: repeat; // Ripeti l'immagine per coprire lo sfondo
+      background-position: center center; // Centra l'immagine iniziale
+      position: relative;
+      overflow: hidden;
+
+      // Overlay scuro per migliorare il contrasto del testo
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(vars.$color-text-dark, 0.7); // Overlay scuro (70% opacità)
+        z-index: -1; // Metti l'overlay dietro il contenuto della navbar
+      }
+      // --- FINE NUOVI STILI SFONDO CON IMMAGINE ---
+
+      // Colori del testo e degli elementi per contrastare lo sfondo chiaro + overlay scuro
+      color: vars.$color-white; // Imposta un colore del testo chiaro
+      padding: 0 vars.$spacing-md;
+      font-family: vars.$font-family-primary;
+      height: 64px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .brand-link {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: vars.$color-vibrant-fuchsia; // Rendi il brand più fucsia
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: lighten(vars.$color-vibrant-fuchsia, 10%); // Schiarisci all'hover
+      }
+    }
+
+    .nav-links-container {
+      display: flex;
+      gap: vars.$spacing-md;
+    }
+
+    .desktop-links a {
+      color: vars.$color-white; // Mantieni bianco per leggibilità
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: color 0.3s ease, transform 0.2s ease;
+
+      &:hover {
+        color: vars.$color-vibrant-fuchsia; // Il tuo fucsia acceso all'hover
+        transform: translateY(-2px);
+      }
+    }
+
+    .menu-button {
+      display: none;
+      color: vars.$color-white; // Mantieni bianco per leggibilità
+    }
+
+    // **NUOVI STILI PER IL SELETTORE LINGUA**
+    .language-selector {
+      display: flex;
+      align-items: center;
+      margin-left: vars.$spacing-md; // Spazio tra nav e selettore
+
+      .flag-icon {
+        width: 28px; // Dimensione delle bandiere
+        height: 28px;
+        border-radius: 50%; // Rendi le bandiere rotonde
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        transition: transform 0.2s ease;
+      }
+
+      button {
+        padding: 0; // Rimuovi padding extra dal mat-icon-button
+        min-width: unset; // Rimuovi min-width
+        width: 40px; // Larghezza del pulsante per contenere la bandiera
+        height: 40px; // Altezza del pulsante
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover .flag-icon {
+          transform: scale(1.1); // Effetto zoom al hover
+        }
+      }
+    }
+
+    // Stili per le bandiere all'interno del menu mobile
+    .flag-icon-menu {
+      width: 24px; // Leggermente più piccole nel menu
+      height: 24px;
+      border-radius: 50%;
+      margin-right: vars.$spacing-sm;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+
+    // Media query per dispositivi mobili
+    @media (max-width: vars.$breakpoint-md) {
+      .desktop-links {
+        display: none;
+      }
+
+      .menu-button {
+        display: block;
+      }
+
+      .brand-link {
+        font-size: 1.2rem;
+      }
+
+      // Nascondi il selettore di lingua desktop su mobile
+      .desktop-lang-selector {
+        display: none;
+      }
+      // Mostra il selettore di lingua mobile nel menu
+      .mobile-lang-selector {
+        display: flex; // O block, a seconda del layout desiderato nel menu
+        flex-direction: column;
+        padding: vars.$spacing-sm 0;
+        border-top: 1px solid rgba(vars.$color-text-light, 0.1); // Separatore
+        margin-top: vars.$spacing-sm;
+      }
+    }
+
+    // Stili per il menu di Angular Material (mat-menu)
+    .mat-menu-panel {
+      background-color: vars.$color-white;
+      border: 1px solid rgba(vars.$color-accent, 0.2);
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .mat-menu-item {
+      color: vars.$color-text-dark;
+      font-family: vars.$font-family-primary;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: rgba(vars.$color-vibrant-fuchsia, 0.1);
+        color: vars.$color-vibrant-fuchsia;
+      }
+    }
+

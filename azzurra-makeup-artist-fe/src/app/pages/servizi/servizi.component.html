@@ -1,0 +1,86 @@
+<!-- src/app/pages/servizi/servizi.component.html -->
+
+<section class="servizi-container mat-elevation-z4">
+  <h1 class="page-title">
+    <mat-icon class="title-icon">palette</mat-icon> <span i18n="@@serviziTitle">I Miei Servizi</span>
+  </h1>
+  <p class="page-subtitle" i18n="@@serviziSubtitle">
+    Offro una vasta gamma di servizi di make-up e hair styling per ogni occasione.
+  </p>
+
+  <!-- Sezione Trucco Sposa (in evidenza) -->
+  <div class="service-highlight-card mat-elevation-z6">
+    <div class="highlight-content">
+      <h2 class="highlight-title" i18n="@@serviziHighlightTitle">Trucco Sposa Personalizzato</h2>
+      <p class="highlight-description" i18n="@@serviziHighlightDescription">
+        Il giorno del tuo matrimonio è un momento unico e speciale. Con un trucco sposa personalizzato, ti sentirai radiosa e sicura di te, con un look che esalta la tua bellezza naturale e dura impeccabile per tutta la giornata.
+      </p>
+      <button mat-raised-button color="accent" routerLink="/trucco-sposa"
+              i18n-attr.aria-label="@@serviziHighlightButtonAria" aria-label="Scopri i pacchetti trucco sposa">
+        <span i18n="@@serviziHighlightButton">Scopri i Pacchetti Sposa</span>
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+    <div class="highlight-image-container">
+      <img src="assets/trucco-sposa-seguimi.png" i18n-alt="@@serviziHighlightImageAlt" alt="Trucco Sposa in evidenza" class="highlight-image"
+           onerror="this.onerror=null; this.src='https://placehold.co/600x400/FFC0CB/FFFFFF?text=Trucco+Sposa';">
+    </div>
+  </div>
+
+  <!-- Sezioni Altri Servizi - MODIFICATO PER LAYOUT AFFIANCATO E CAROUSEL -->
+  <div class="other-services-grid">
+    <mat-card class="service-card mat-elevation-z3"
+              *ngFor="let service of services; let i = index"
+              [ngClass]="{'image-left': i % 2 === 0, 'image-right': i % 2 !== 0}">
+      <div class="service-card-image-container">
+        <img [src]="service.images[service.currentIndex]"
+             [alt]="service.imageAltKey" class="service-image"
+             onerror="this.onerror=null; this.src='https://placehold.co/400x250/E6E6FA/333333?text=Immagine+Servizio';">
+
+        <div class="carousel-controls">
+          <button mat-icon-button (click)="prevImage(service); $event.stopPropagation()"
+                  i18n-attr.aria-label="@@commonPrevImageAria" aria-label="Immagine precedente">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button mat-icon-button (click)="nextImage(service); $event.stopPropagation()"
+                  i18n-attr.aria-label="@@commonNextImageAria" aria-label="Immagine successiva">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+        <button mat-icon-button class="fullscreen-button"
+                (click)="openFullscreen(service.images[service.currentIndex], service.imageAltKey); $event.stopPropagation()"
+                i18n-attr.aria-label="@@commonFullscreenImageAria" aria-label="Visualizza immagine a schermo intero">
+          <mat-icon>fullscreen</mat-icon>
+        </button>
+      </div>
+      <div class="service-card-content-wrapper">
+        <mat-card-header>
+          <!-- I18n per title e subtitle -->
+          <mat-card-title i18n="{{service.titleKey}}">{{ service.titleKey }}</mat-card-title>
+          <mat-card-subtitle i18n="{{service.subtitleKey}}">{{ service.subtitleKey }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- I18n per description -->
+          <p i18n="{{service.descriptionKey}}">{{ service.descriptionKey }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-button color="primary" routerLink="/contatti"
+            [attr.aria-label]="service.buttonAriaKey">
+            <span i18n="@@serviziCeremonyButton">Richiedi Informazioni</span>
+            </button>
+        </mat-card-actions>
+      </div>
+    </mat-card>
+  </div>
+</section>
+
+<!-- Fullscreen Modal -->
+<div class="fullscreen-overlay" *ngIf="isFullscreen" (click)="closeFullscreen()">
+  <button mat-icon-button class="close-fullscreen-button" (click)="closeFullscreen(); $event.stopPropagation()"
+          i18n-attr.aria-label="@@commonCloseFullscreenAria" aria-label="Chiudi schermo intero">
+    <mat-icon>close</mat-icon>
+  </button>
+  <img [src]="fullscreenImageUrl" [alt]="fullscreenImageAlt" class="fullscreen-image"
+       onerror="this.onerror=null; this.src='https://placehold.co/800x600/CCCCCC/333333?text=Immagine+Non+Trovata';">
+</div>
+

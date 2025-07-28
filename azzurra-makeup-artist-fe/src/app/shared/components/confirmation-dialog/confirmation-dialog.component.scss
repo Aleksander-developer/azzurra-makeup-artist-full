@@ -1,0 +1,18 @@
+/* src/app/shared/components/confirmation-dialog/confirmation-dialog.component.scss */
+
+// Puoi aggiungere stili specifici per il dialogo qui, se necessario.
+// Ad esempio, per personalizzare il testo o i bottoni.
+// Per ora, useremo gli stili predefiniti di Angular Material.
+
+h2 {
+  color: #3f51b5; // Colore blu per il titolo
+}
+
+p {
+  color: #333; // Colore testo scuro
+}
+
+mat-dialog-actions button {
+  min-width: 80px;
+}
+

@@ -1,0 +1,503 @@
+/* src/app/pages/servizi/servizi.component.scss */
+
+@use '../../../styles/variables' as vars;
+@use '../../../styles/mixins' as mixins;
+
+.servizi-container {
+  padding: vars.$spacing-xl vars.$spacing-lg; /* Padding generale per il container */
+  max-width: 1300px;
+  margin: vars.$spacing-xl auto;
+  background-color: rgba(vars.$color-background-light, 0.95);
+  border-radius: vars.$border-radius-lg;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  color: vars.$color-text-dark;
+  font-family: vars.$font-family-primary;
+  text-align: center;
+}
+
+.page-title {
+  font-family: vars.$font-family-secondary;
+  font-size: 3rem;
+  color: vars.$color-vibrant-fuchsia;
+  margin-bottom: vars.$spacing-md;
+  text-shadow: 0 0 10px rgba(vars.$color-vibrant-fuchsia, 0.4);
+}
+
+.page-subtitle {
+  font-size: 1.2rem;
+  color: vars.$color-text-light;
+  margin-bottom: vars.$spacing-xxl;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --- Sezione Trucco Sposa (In Evidenza) --- */
+.service-highlight-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: vars.$spacing-lg;
+  background: linear-gradient(135deg, vars.$color-light-pink-bg 0%, lighten(vars.$color-light-pink-bg, 5%) 100%);
+  border: 1px solid rgba(vars.$color-vibrant-fuchsia, 0.3);
+  border-radius: vars.$border-radius-xl;
+  padding: vars.$spacing-lg;
+  margin-bottom: vars.$spacing-xxl;
+  box-shadow: 0 8px 25px rgba(vars.$color-vibrant-fuchsia, 0.2);
+  text-align: left;
+
+  .highlight-content {
+    flex: 1;
+    padding-right: vars.$spacing-lg;
+  }
+
+  .highlight-title {
+    font-family: vars.$font-family-secondary;
+    font-size: 2.5rem;
+    color: vars.$color-vibrant-fuchsia;
+    margin-bottom: vars.$spacing-md;
+    text-shadow: 0 0 8px rgba(vars.$color-vibrant-fuchsia, 0.3);
+  }
+
+  .highlight-description {
+    font-size: 1.1rem;
+    line-height: vars.$line-height-base;
+    color: vars.$color-dark-purple-text;
+    margin-bottom: vars.$spacing-lg;
+  }
+
+  .highlight-image-container {
+    flex-shrink: 0;
+    width: 40%;
+    max-width: 400px;
+    border-radius: vars.$border-radius-lg;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .highlight-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  button {
+    font-size: 1.1rem;
+    padding: vars.$spacing-sm vars.$spacing-md;
+    border-radius: vars.$border-radius-md;
+    transition: all vars.$transition-speed-normal vars.$transition-ease;
+    mat-icon {
+      margin-left: vars.$spacing-xs;
+    }
+  }
+}
+
+/* --- Sezioni Altri Servizi - Layout Desktop (>= 993px) --- */
+.other-services-grid {
+  display: flex;
+  flex-direction: column;
+  gap: vars.$spacing-xxl;
+  margin-top: vars.$spacing-xxl;
+}
+
+.service-card {
+  display: flex;
+  align-items: center;
+  background-color: vars.$color-white;
+  border: 1px solid vars.$color-border;
+  border-radius: vars.$border-radius-md;
+  transition: transform vars.$transition-speed-normal vars.$transition-ease, box-shadow vars.$transition-speed-normal vars.$transition-ease;
+  padding: vars.$spacing-lg;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(vars.$color-vibrant-fuchsia, 0.15);
+  }
+
+  .service-card-image-container {
+    position: relative;
+    flex-shrink: 0;
+    width: 50%;
+    max-width: 500px;
+    border-radius: vars.$border-radius-md;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: vars.$spacing-xs;
+    aspect-ratio: 4/3;
+  }
+
+  .service-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .carousel-controls {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 vars.$spacing-xs;
+
+    button {
+      background-color: rgba(vars.$color-vibrant-fuchsia, 0.6);
+      color: vars.$color-white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      transition: background-color vars.$transition-speed-normal vars.$transition-ease;
+
+      &:hover {
+        background-color: vars.$color-vibrant-fuchsia;
+      }
+      mat-icon {
+        font-size: 24px;
+      }
+    }
+  }
+
+  .fullscreen-button {
+    position: absolute;
+    bottom: vars.$spacing-xs;
+    right: vars.$spacing-xs;
+    background-color: rgba(vars.$color-vibrant-fuchsia, 0.6);
+    color: vars.$color-white;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    transition: background-color vars.$transition-speed-normal vars.$transition-ease;
+    z-index: 1;
+
+    &:hover {
+      background-color: vars.$color-vibrant-fuchsia;
+    }
+    mat-icon {
+      font-size: 20px;
+    }
+  }
+
+  .service-card-content-wrapper {
+    flex: 1;
+    padding: 0 vars.$spacing-lg; /* Padding simmetrico per desktop */
+    box-sizing: border-box;
+  }
+
+  mat-card-header {
+    padding: vars.$spacing-sm 0;
+    mat-card-title {
+      font-family: vars.$font-family-secondary;
+      font-size: 2.4rem; /* AUMENTATO: Dimensione maggiore per desktop */
+      color: vars.$color-dark-purple-text;
+      margin-bottom: vars.$spacing-xxs;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
+      text-align: center !important; /* FORZATO: Centra il titolo */
+    }
+    mat-card-subtitle {
+      font-size: 1.2rem; /* AUMENTATO: Dimensione maggiore per desktop */
+      color: vars.$color-text-light;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
+      text-align: center !important; /* FORZATO: Centra il sottotitolo */
+    }
+  }
+
+  mat-card-content {
+    padding: vars.$spacing-sm 0;
+    p {
+      font-size: 1.3rem; /* AUMENTATO: Dimensione maggiore per desktop */
+      line-height: vars.$line-height-base;
+      color: vars.$color-text-dark;
+      margin-bottom: 0;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      text-align: center !important; /* FORZATO: Centra il testo del contenuto */
+    }
+  }
+
+  mat-card-actions {
+    padding: vars.$spacing-sm 0;
+    display: flex;
+    justify-content: center !important; /* FORZATO: Centra il pulsante */
+    button {
+      font-size: 1.2rem; /* AUMENTATO: Dimensione maggiore per desktop */
+      padding: vars.$spacing-xs vars.$spacing-md;
+      border-radius: vars.$border-radius-sm;
+      mat-icon {
+        font-size: 20px;
+      }
+    }
+  }
+
+  /* Alternanza delle immagini per desktop (>= 993px) */
+  &.image-left {
+    flex-direction: row;
+  }
+
+  &.image-right {
+    flex-direction: row-reverse;
+  }
+}
+
+/* --- Fullscreen Modal --- */
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.fullscreen-image {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: vars.$border-radius-md;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.close-fullscreen-button {
+  position: absolute;
+  top: vars.$spacing-md;
+  right: vars.$spacing-md;
+  background-color: rgba(vars.$color-vibrant-fuchsia, 0.8);
+  color: vars.$color-white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  min-height: 50px;
+  font-size: 30px;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  cursor: pointer;
+  transition: background-color vars.$transition-speed-normal vars.$transition-ease;
+
+  &:hover {
+    background-color: vars.$color-vibrant-fuchsia;
+  }
+  mat-icon {
+    font-size: 30px;
+  }
+}
+
+
+/* --- Responsive Adjustments (sotto i 993px) --- */
+@media (max-width: vars.$breakpoint-lg) { /* breakpoint-lg è 992px */
+  .page-title {
+    font-size: 2.5rem;
+  }
+  .highlight-title {
+    font-size: 2rem;
+  }
+  .highlight-description {
+    font-size: 1rem;
+  }
+  .service-highlight-card {
+    flex-direction: column;
+    .highlight-content {
+      padding-right: 0;
+      text-align: center;
+    }
+    .highlight-image-container {
+      width: 80%;
+      max-width: 500px;
+      margin-bottom: vars.$spacing-lg;
+    }
+  }
+
+  .service-card {
+    flex-direction: column !important; /* FORZA: immagine sopra, contenuto sotto */
+    padding: vars.$spacing-md; /* Padding della card intera su tablet/mobile */
+    box-sizing: border-box;
+
+    .service-card-image-container {
+      width: 100%; /* Immagine a piena larghezza */
+      max-width: none;
+      padding: vars.$spacing-xs;
+      order: -1; /* Forza l'immagine ad andare sopra il contenuto */
+      box-sizing: border-box;
+      aspect-ratio: 16/9; /* Proporzione più ampia per mobile (es. 16:9) */
+      height: auto; /* Altezza automatica basata sull'aspect-ratio */
+    }
+    .service-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .service-card-content-wrapper {
+      width: 100%;
+      padding: vars.$spacing-md; /* Padding simmetrico per il contenuto */
+      text-align: center; /* Testo centrato */
+      box-sizing: border-box;
+    }
+
+    // Reset flex-direction per image-right in modalità colonna
+    &.image-right {
+      flex-direction: column !important; /* Forza colonna anche se era row-reverse */
+    }
+
+    mat-card-header {
+      padding-top: vars.$spacing-sm;
+      padding-bottom: vars.$spacing-xxs;
+      mat-card-title {
+        font-size: 1.9rem; /* AUMENTATO: Più grande per tablet */
+        white-space: normal;
+        word-break: break-word;
+        text-align: center !important; /* FORZATO: Centra il titolo */
+      }
+      mat-card-subtitle {
+        font-size: 1.1rem; /* AUMENTATO: Più grande per tablet */
+        white-space: normal;
+        word-break: break-word;
+        text-align: center !important; /* FORZATO: Centra il sottotitolo */
+      }
+    }
+    mat-card-content {
+      padding-top: vars.$spacing-xs;
+      padding-bottom: vars.$spacing-xs;
+      p {
+        font-size: 1.2rem; /* AUMENTATO: Più grande per tablet */
+        word-break: break-word;
+        overflow-wrap: break-word;
+        text-align: center !important; /* FORZATO: Centra il testo del contenuto */
+      }
+    }
+    mat-card-actions {
+      justify-content: center !important; /* FORZATO: Centra il pulsante */
+      padding-top: vars.$spacing-sm;
+    }
+  }
+}
+
+@media (max-width: vars.$breakpoint-md) { /* breakpoint-md è 768px */
+  .servizi-container {
+    padding: vars.$spacing-md vars.$spacing-sm; /* Riduci padding orizzontale */
+    margin-top: vars.$spacing-xl;
+  }
+  .page-title {
+    font-size: 1.8rem;
+  }
+  .page-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: vars.$spacing-lg;
+  }
+  .service-highlight-card {
+    padding: vars.$spacing-md;
+    gap: vars.$spacing-md;
+    .highlight-title {
+      font-size: 1.6rem;
+    }
+    .highlight-description {
+      font-size: 0.9rem;
+    }
+    button {
+      font-size: 0.9rem;
+      padding: 0.7rem 1.8rem;
+    }
+  }
+  .other-services-grid {
+    gap: vars.$spacing-lg;
+  }
+  .service-card {
+    padding: vars.$spacing-sm;
+    .service-card-image-container {
+      aspect-ratio: 4/3;
+    }
+    mat-card-header {
+      mat-card-title {
+        font-size: 1.6rem;
+      }
+      mat-card-subtitle {
+        font-size: 1rem;
+      }
+    }
+    mat-card-content p {
+      font-size: 1.1rem;
+    }
+    mat-card-actions button {
+      font-size: 1rem;
+    }
+    // AUMENTA LO SPAZIO INTERNO E RIDUCI I MARGINI ESTERNI PER IL CONTENUTO
+    .service-card-content-wrapper {
+      padding: vars.$spacing-md vars.$spacing-sm; /* Aumenta padding verticale, riduci orizzontale */
+    }
+    // Aumenta la dimensione delle icone all'interno dei testi
+    mat-card-content p mat-icon { /* Se le icone sono dentro i paragrafi */
+      font-size: 1.2em; /* Rendi le icone leggermente più grandi del testo circostante */
+      vertical-align: middle; /* Allinea verticalmente con il testo */
+      margin-right: vars.$spacing-xxs; /* Piccolo spazio a destra */
+    }
+  }
+}
+@media (max-width: vars.$breakpoint-sm) { /* breakpoint-sm è 576px */
+  .servizi-container {
+    padding: vars.$spacing-md vars.$spacing-xs; /* Riduci ulteriormente padding orizzontale */
+  }
+  .page-title {
+    font-size: 1.5rem;
+  }
+  .highlight-title {
+    font-size: 1.3rem;
+  }
+  .highlight-description {
+    font-size: 0.85rem;
+  }
+  .service-card {
+    padding: vars.$spacing-xs;
+    .service-card-image-container {
+      aspect-ratio: 1/1;
+    }
+    .service-card-content-wrapper {
+      padding: vars.$spacing-sm vars.$spacing-xs; /* Aumenta padding verticale, riduci orizzontale */
+    }
+    mat-card-header mat-card-title {
+      font-size: 1.3rem;
+    }
+    mat-card-header mat-card-subtitle {
+      font-size: 0.9rem;
+    }
+    mat-card-content p {
+      font-size: 1rem;
+    }
+    mat-card-actions button {
+      font-size: 0.9rem;
+      padding: 0.5rem 1.2rem;
+    }
+    // Aumenta la dimensione delle icone all'interno dei testi
+    mat-card-content p mat-icon { /* Se le icone sono dentro i paragrafi */
+      font-size: 1.2em; /* Rendi le icone leggermente più grandi del testo circostante */
+      vertical-align: middle; /* Allinea verticalmente con il testo */
+      margin-right: vars.$spacing-xxs; /* Piccolo spazio a destra */
+    }
+  }
+}
+

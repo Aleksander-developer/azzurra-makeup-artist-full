@@ -1,0 +1,165 @@
+<!-- src/app/admin/portfolio-manager/portfolio-manager.component.html -->
+<section class="portfolio-manager-container">
+  <h1 class="page-title">
+    <mat-icon class="title-icon">dashboard</mat-icon> <span i18n="@@adminPortfolioManagerTitle">Gestione Portfolio</span>
+  </h1>
+  <p class="page-subtitle" i18n="@@adminPortfolioManagerSubtitle">Aggiungi, modifica o elimina i lavori del tuo portfolio e carica le immagini.</p>
+
+  <!-- Form per Aggiungere/Modificare un elemento del portfolio -->
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>{{ formTitle }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="portfolioForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label i18n="@@adminPortfolioManagerTitleLabel">Titolo</mat-label>
+          <input matInput formControlName="title" i18n-placeholder="@@adminPortfolioManagerTitlePlaceholder" placeholder="Es. Trucco Sposa Classico" required>
+          <mat-error *ngIf="portfolioForm.get('title')?.invalid && portfolioForm.get('title')?.touched" i18n="@@adminPortfolioManagerTitleRequired">
+            Il titolo è obbligatorio.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label i18n="@@adminPortfolioManagerSubtitleLabel">Sottotitolo</mat-label>
+          <input matInput formControlName="subtitle" i18n-placeholder="@@adminPortfolioManagerSubtitlePlaceholder" placeholder="Es. Look Naturale e Luminoso">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label i18n="@@adminPortfolioManagerDescriptionLabel">Descrizione</mat-label>
+          <textarea matInput formControlName="description" i18n-placeholder="@@adminPortfolioManagerDescriptionPlaceholder" placeholder="Descrivi il lavoro in dettaglio..." rows="3"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label i18n="@@adminPortfolioManagerCategoryLabel">Categoria</mat-label>
+          <mat-select formControlName="category" required>
+            <mat-option value="Sposa" i18n="@@adminPortfolioManagerCategoryBride">Sposa</mat-option>
+            <mat-option value="Cerimonia" i18n="@@adminPortfolioManagerCategoryCeremony">Cerimonia</mat-option>
+            <mat-option value="Editoriale" i18n="@@adminPortfolioManagerCategoryEditorial">Editoriale</mat-option>
+            <mat-option value="Eventi" i18n="@@adminPortfolioManagerCategoryEvents">Eventi</mat-option>
+            <mat-option value="Altro" i18n="@@adminPortfolioManagerCategoryOther">Altro</mat-option>
+          </mat-select>
+          <mat-error *ngIf="portfolioForm.get('category')?.invalid && portfolioForm.get('category')?.touched" i18n="@@adminPortfolioManagerCategoryRequired">
+            La categoria è obbligatoria.
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Sezione per il caricamento delle immagini del portfolio -->
+        <div class="image-gallery-form">
+          <h3 i18n="@@adminPortfolioManagerImagesTitle">Immagini del Portfolio <span class="required-asterisk">*</span></h3>
+          <p i18n="@@adminPortfolioManagerImagesDescription">Carica tutte le immagini per questo lavoro (massimo 10). Una casuale verrà mostrata nella lista portfolio.</p>
+
+          <!-- Input file singolo per la selezione multipla -->
+          <input type="file" #galleryFileInput (change)="onFilesSelected($event)" accept="image/*" multiple style="display: none;">
+          <button mat-raised-button color="primary" type="button" (click)="galleryFileInput.click()" i18n="@@adminPortfolioManagerSelectImagesButton">
+            <mat-icon>add_photo_alternate</mat-icon> Seleziona Immagini
+          </button>
+          <!-- Conta le immagini nel FormArray -->
+          <span class="file-count" *ngIf="imagesFormArray.length > 0" i18n="@@adminPortfolioManagerFileCount">
+            {{ imagesFormArray.length }} file selezionati.
+          </span>
+
+          <!-- Loop attraverso i controlli del FormArray per gestire anteprime -->
+          <div *ngFor="let imageGroup of imagesFormArray.controls; let i = index; trackBy: trackByFn" [formGroupName]="i" class="image-item-group">
+            <div class="gallery-image-wrapper">
+              <!-- Anteprima dell'immagine -->
+              <div *ngIf="allImagePreviews[i]" class="image-preview-container">
+                <!-- L'alt text qui userà il titolo generale del portfolio o un fallback -->
+                <img [src]="allImagePreviews[i] || ''" [alt]="portfolioForm.get('title')?.value || 'Anteprima Immagine ' + (i + 1)" class="image-preview" onerror="this.src='assets/placeholder.jpg'">
+                <button mat-icon-button color="warn" (click)="removeImage(i)" class="remove-image-button" i18n-aria-label="@@adminPortfolioManagerRemoveImageAria" aria-label="Rimuovi immagine">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </div>
+              <!-- Mostra il nome del file dal FormGroup.file -->
+              <span class="file-name" *ngIf="imageGroup.get('isNew')?.value && imageGroup.get('file')?.value">
+                {{ imageGroup.get('file')?.value.name }}
+              </span>
+              <!-- Link per immagini esistenti -->
+              <span class="file-name" *ngIf="!imageGroup.get('isNew')?.value && imageGroup.get('src')?.value" i18n="@@adminPortfolioManagerCurrentImageLink">
+                Immagine attuale: <a [href]="imageGroup.get('src')?.value || ''" target="_blank">Vedi</a>
+              </span>
+            </div>
+
+            <!-- Pulsante per rimuovere l'immagine dal form (e dall'upload se nuova) -->
+            <button mat-icon-button color="warn" (click)="removeImage(i)" type="button" i18n-aria-label="@@adminPortfolioManagerRemoveImageButtonAria" aria-label="Rimuovi immagine">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message-ui">
+          <mat-icon>error_outline</mat-icon> <span i18n="@@adminPortfolioManagerErrorMessage">{{ errorMessage }}</span>
+        </div>
+        <div *ngIf="successMessage" class="success-message">
+          <mat-icon>check_circle_outline</mat-icon> <span i18n="@@adminPortfolioManagerSuccessMessage">{{ successMessage }}</span>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="portfolioForm.invalid || loading || isUploading">
+            <ng-container *ngIf="!loading && !isUploading">
+              {{ submitButtonLabel }}
+            </ng-container>
+            <span *ngIf="loading" class="button-loading-content">
+              <mat-spinner [diameter]="20"></mat-spinner>
+              <span i18n="@@adminPortfolioManagerSaving">Salvataggio...</span>
+            </span>
+            <span *ngIf="isUploading" class="button-loading-content">
+              <mat-spinner [diameter]="20"></mat-spinner>
+              <span i18n="@@adminPortfolioManagerUploading">Caricamento Immagini...</span>
+            </span>
+          </button>
+          <button mat-stroked-button color="accent" type="button" (click)="clearForm()" *ngIf="editingItem || portfolioForm.dirty" i18n="@@adminPortfolioManagerClearFormButton">
+            Annulla / Nuovo Lavoro
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Lista degli elementi del portfolio esistenti -->
+  <mat-card class="list-card">
+    <mat-card-header>
+      <mat-card-title i18n="@@adminPortfolioManagerExistingWorksTitle">Lavori Esistenti</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngIf="portfolioItems.length === 0 && !loading" class="no-items-message">
+        <mat-icon>info</mat-icon> <span i18n="@@adminPortfolioManagerNoItemsMessage">Nessun lavoro nel portfolio. Aggiungine uno!</span>
+      </div>
+      <div *ngIf="loading" class="loading-spinner">
+        <mat-spinner [diameter]="50"></mat-spinner>
+        <p i18n="@@adminPortfolioManagerLoadingWorks">Caricamento lavori...</p>
+      </div>
+
+      <table mat-table [dataSource]="portfolioItems" class="full-width-table" *ngIf="portfolioItems.length > 0">
+        <!-- Colonna Titolo -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef i18n="@@adminPortfolioManagerTableTitleHeader"> Titolo </th>
+          <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+        </ng-container>
+
+        <!-- Colonna Categoria -->
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef i18n="@@adminPortfolioManagerTableCategoryHeader"> Categoria </th>
+          <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+        </ng-container>
+
+        <!-- Colonna Azioni -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef i18n="@@adminPortfolioManagerTableActionsHeader"> Azioni </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="editItem(element)" i18n-aria-label="@@adminPortfolioManagerEditButtonAria" aria-label="Modifica lavoro">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteItem(element.id)" i18n-aria-label="@@adminPortfolioManagerDeleteButtonAria" aria-label="Elimina lavoro">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</section>
+

@@ -1,0 +1,298 @@
+/* src/app/pages/portfolio/portfolio.component.scss */
+
+@use '../../../styles/variables' as vars;
+@use '../../../styles/mixins' as mixins;
+
+// Nuova sezione Hero per il Portfolio
+.portfolio-hero-section {
+  position: relative;
+  width: 100%;
+  height: 350px; // Altezza fissa per la sezione hero (leggermente ridotta per più compattezza)
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(135deg, vars.$color-vibrant-fuchsia 0%, vars.$color-dark-purple-text 100%);
+  color: vars.$color-white; // Testo bianco per contrasto
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); // Ombra per profondità
+  margin-top: -80px; // Compensare l'altezza della navbar se è fissa
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2); // Overlay leggermente più chiaro per il gradiente
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: vars.$spacing-md;
+    padding-top: calc(90px + vars.$spacing-lg); // <-- AGGIUNTO: Padding per spingere il testo sotto la navbar
+    max-width: 900px; // Limita la larghezza del contenuto testuale
+  }
+
+  .page-title {
+    font-family: vars.$font-family-secondary;
+    font-size: 4.5rem; // Dimensione più grande per impatto
+    font-weight: 700;
+    color: vars.$color-white; // Colore bianco per il titolo
+    margin-bottom: vars.$spacing-sm;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); // Ombra più marcata per leggibilità
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: vars.$spacing-md;
+    line-height: 1.1; // Migliora la spaziatura tra le righe
+    word-break: break-word; // Permette al testo di andare a capo
+    white-space: normal; // Assicura che il testo vada a capo
+    padding: 0 vars.$spacing-xs; // Aggiunto padding per evitare tagli ai bordi
+
+    .title-icon {
+      font-size: 4.5rem; // Icona più grande
+      color: vars.$color-white;
+    }
+  }
+
+  .page-subtitle {
+    font-size: 1.6rem; // Sottotitolo più grande
+    color: vars.$color-white;
+    max-width: 700px;
+    margin: 0 auto;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    padding: 0 vars.$spacing-xs; // Aggiunto padding per evitare tagli ai bordi
+  }
+}
+
+// Contenitore principale del contenuto, ex .portfolio-container
+.portfolio-content-wrapper {
+  padding: vars.$spacing-xxl vars.$spacing-lg; /* Padding per desktop */
+  max-width: 1200px;
+  margin: vars.$spacing-xl auto; // Margine superiore per separare dalla hero
+  background-color: rgba(vars.$color-background-light, 0.95);
+  border-radius: vars.$border-radius-lg;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  color: vars.$color-text-dark;
+  font-family: vars.$font-family-primary;
+  text-align: center;
+}
+
+.loading-spinner, .no-items-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: vars.$spacing-xxl;
+  color: vars.$color-text-light;
+  font-size: 1.1rem;
+
+  mat-spinner {
+    margin-bottom: vars.$spacing-md;
+  }
+
+  mat-icon {
+    font-size: 48px;
+    color: vars.$color-accent;
+    margin-bottom: vars.$spacing-md;
+  }
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Card leggermente più grandi */
+  gap: vars.$spacing-xl; // Aumenta il gap tra le card
+  justify-content: center;
+  margin-top: vars.$spacing-xl;
+}
+
+.portfolio-card {
+  background-color: vars.$color-white;
+  border-radius: vars.$border-radius-lg;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); // Ombra più pronunciata
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-8px); // Effetto hover più marcato
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  img {
+    width: 100%;
+    height: 220px; // Altezza leggermente maggiore per le immagini
+    object-fit: cover; // Mantiene cover qui per le immagini delle card
+    border-bottom: 1px solid vars.$color-border;
+  }
+
+  mat-card-content {
+    padding: vars.$spacing-md;
+    flex-grow: 1;
+    text-align: left;
+  }
+
+  .card-title {
+    font-family: vars.$font-family-secondary;
+    font-size: 1.6rem; // Titolo card leggermente più grande
+    color: vars.$color-dark-purple-text;
+    margin-top: 0;
+    margin-bottom: vars.$spacing-xs;
+  }
+
+  .card-subtitle {
+    font-size: 1rem;
+    color: vars.$color-text-light;
+    margin-bottom: vars.$spacing-sm;
+  }
+
+  .card-category {
+    display: inline-block;
+    background-color: vars.$color-light-pink-bg;
+    color: vars.$color-dark-pink-text;
+    padding: 0.3rem 0.6rem;
+    border-radius: vars.$border-radius-sm;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  mat-card-actions {
+    padding: vars.$spacing-sm vars.$spacing-md vars.$spacing-md;
+    justify-content: flex-end;
+
+    button {
+      background-color: vars.$color-accent;
+      color: vars.$color-white;
+      font-weight: 600;
+      border-radius: vars.$border-radius-md;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+
+      &:hover {
+        background-color: darken(vars.$color-accent, 10%);
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: vars.$breakpoint-lg) { /* 992px */
+  .portfolio-hero-section {
+    height: 300px;
+    .hero-content {
+      padding-top: calc(80px + vars.$spacing-md); // Adatta padding-top per tablet
+    }
+    .page-title {
+      font-size: 3.8rem;
+      .title-icon {
+        font-size: 3.8rem;
+      }
+    }
+    .page-subtitle {
+      font-size: 1.4rem;
+    }
+  }
+
+  .portfolio-content-wrapper {
+    padding: vars.$spacing-lg vars.$spacing-md;
+    margin-top: vars.$spacing-xl;
+  }
+  .portfolio-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: vars.$spacing-md;
+  }
+  .portfolio-card img {
+    height: 180px;
+  }
+  .portfolio-card .card-title {
+    font-size: 1.4rem;
+  }
+  .portfolio-card .card-subtitle {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: vars.$breakpoint-md) { /* 768px */
+  .portfolio-hero-section {
+    height: 250px;
+    .hero-content {
+      padding-top: calc(80px + vars.$spacing-sm); // Adatta padding-top per mobile medio
+    }
+    .page-title {
+      font-size: 3.2rem;
+      .title-icon {
+        font-size: 3.2rem;
+      }
+    }
+    .page-subtitle {
+      font-size: 1.2rem;
+    }
+  }
+
+  .portfolio-content-wrapper {
+    padding: vars.$spacing-md vars.$spacing-sm;
+    margin: vars.$spacing-lg auto;
+  }
+  .portfolio-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: vars.$spacing-sm;
+  }
+  .portfolio-card img {
+    height: 160px;
+  }
+  .portfolio-card .card-title {
+    font-size: 1.3rem;
+  }
+  .portfolio-card .card-subtitle {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: vars.$breakpoint-sm) { /* 576px */
+  .portfolio-hero-section {
+    height: 200px;
+    .hero-content {
+      padding-top: calc(80px + vars.$spacing-xs); // Adatta padding-top per mobile piccolo
+    }
+    .page-title {
+      font-size: 2.5rem;
+      .title-icon {
+        font-size: 2.5rem;
+      }
+    }
+    .page-subtitle {
+      font-size: 1rem;
+    }
+  }
+
+  .portfolio-content-wrapper {
+    padding: vars.$spacing-md vars.$spacing-xs;
+    margin: vars.$spacing-lg auto;
+  }
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+    gap: vars.$spacing-md;
+  }
+  .portfolio-card img {
+    height: 200px;
+  }
+  .portfolio-card mat-card-content {
+    padding: vars.$spacing-sm;
+  }
+  .portfolio-card .card-title {
+    font-size: 1.2rem;
+  }
+  .portfolio-card .card-subtitle {
+    font-size: 0.85rem;
+  }
+  .portfolio-card .card-category {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+  }
+}
+

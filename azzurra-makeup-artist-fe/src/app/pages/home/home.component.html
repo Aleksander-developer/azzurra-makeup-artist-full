@@ -1,0 +1,99 @@
+<!-- src/app/pages/home/home.component.html -->
+
+<!-- Nuova Sezione Hero con Carousel -->
+<div class="hero-section">
+  <div class="hero-image-container">
+    <!-- Immagine dinamica del carousel con animazione fade -->
+    <img [src]="currentHeroImage"
+         alt="Azzurra Angius Make-up Artist"
+         i18n-alt="@@homeHeroImageAlt"
+         class="hero-image"
+         *ngIf="heroImages.length > 0"
+         onerror="this.src='assets/placeholder.jpg'"
+         [@imageFade]="currentIndex"> <!-- Applica l'animazione qui -->
+    <div *ngIf="heroImages.length === 0" class="no-image-placeholder" i18n="@@homeNoImagePlaceholder">
+      Immagine non disponibile
+    </div>
+
+    <!-- Controlli del Carousel (visibili solo se ci sono più di una immagine) -->
+    <button mat-icon-button class="carousel-button prev" (click)="prevImage()" i18n-aria-label="@@homePreviousImageAria" aria-label="Immagine precedente" *ngIf="heroImages.length > 1">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-icon-button class="carousel-button next" (click)="nextImage()" i18n-aria-label="@@homeNextImageAria" aria-label="Immagine successiva" *ngIf="heroImages.length > 1">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <!-- Punti di navigazione del Carousel -->
+    <div class="carousel-dots" *ngIf="heroImages.length > 1">
+      <span *ngFor="let image of heroImages; let i = index"
+            [class.active]="i === currentIndex"
+            (click)="goToImage(i)"
+            class="dot"
+            [attr.aria-label]="'Vai all\'immagine ' + (i + 1)"></span> <!-- Corretto: [attr.aria-label] -->
+    </div>
+  </div>
+  <div class="hero-text-content">
+    <h1 class="hero-title" i18n="@@homeHeroTitle">Azzurra Angius</h1>
+    <h3 class="hero-subtitle" i18n="@@homeHeroSubtitle">MAKE-UP ARTIST</h3>
+    <button mat-raised-button color="accent" class="book-now-button" routerLink="/contatti" i18n="@@homeBookNowButton">
+      Prenota Ora
+    </button>
+  </div>
+</div>
+
+
+<!-- Contenuto Esistente (ora racchiuso in un wrapper) -->
+<div class="main-content-wrapper">
+  <p class="main-description" i18n="@@homeDescriptionSpecialized">Sono una Make-up Artist specializzata in trucco sposa e cerimonia, con una profonda passione per l'arte del make-up che mi spinge a ricercare costantemente le ultime tendenze e tecniche.</p>
+  <p class="main-description" i18n="@@homeDescriptionHairstyle">Offro anche servizi di Hair Stylist per completare il tuo look, garantendo un'armonia perfetta tra trucco e acconciatura.</p>
+
+  <!-- animazioni -->
+  <div class="animated-block" @fadeSlideIn>
+    <h5 i18n="@@homeLookingForServiceQuestion">Stai cercando un servizio di make-up e hair styling che ti faccia sentire unica e radiosa?</h5>
+    <p i18n="@@homeServiceDescriptionPart1">
+      Con la mia esperienza e la mia attenzione ai dettagli, trasformo i tuoi desideri in realtà, valorizzando la tua bellezza naturale e creando un look che ti rispecchi appieno.
+    </p>
+    <p i18n="@@homeServiceDescriptionPart2">
+      Che sia per il giorno del tuo matrimonio, un evento speciale o un servizio fotografico, ti garantisco un'esperienza personalizzata e un risultato impeccabile.
+    </p>
+    <span i18n="@@homeNoStressPrivacy">
+      Niente stress, solo bellezza e privacy.
+    </span>
+    <p i18n="@@homeGoalBeautiful">
+      Il mio obiettivo è farti sentire bella, sicura di te e a tuo agio, in ogni occasione.
+    </p>
+  </div>
+
+  <!-- garanzie -->
+  <section class="guarantees-block" @fadeSlideIn>
+    <h5 i18n="@@homeGuaranteesTitle">Le mie Garanzie per Te</h5>
+    <div class="guarantees-list">
+      <div class="guarantee-item">
+        <mat-icon>verified</mat-icon>
+        <h6 i18n="@@homeGuaranteeQualityProductsTitle">Prodotti di Qualità Superiore</h6>
+        <p i18n="@@homeGuaranteeQualityProductsDescription">Utilizzo solo prodotti professionali delle migliori marche, per garantire durata e resa impeccabile, rispettando la tua pelle.</p>
+      </div>
+      <div class="guarantee-item">
+        <mat-icon>event_available</mat-icon>
+        <h6 i18n="@@homeGuaranteePunctualityTitle">Puntualità e Organizzazione</h6>
+        <p i18n="@@homeGuaranteePunctualityDescription">La tua tranquillità è la mia priorità. Sono sempre puntuale e organizzo ogni dettaglio per un servizio senza intoppi.</p>
+      </div>
+      <div class="guarantee-item">
+        <mat-icon>face</mat-icon>
+        <h6 i18n="@@homeGuaranteePersonalizedLookTitle">Look Personalizzato</h6>
+        <p i18n="@@homeGuaranteePersonalizedLookDescription">Ogni volto è unico. Insieme creeremo il look perfetto che esalti la tua bellezza naturale e si adatti al tuo stile.</p>
+      </div>
+      <div class="guarantee-item">
+        <mat-icon>support_agent</mat-icon>
+        <h6 i18n="@@homeGuaranteeDedicatedAssistanceTitle">Assistenza Dedicata</h6>
+        <p i18n="@@homeGuaranteeDedicatedAssistanceDescription">Dalla prima consulenza al giorno dell'evento, sarò al tuo fianco per ogni esigenza, offrendo supporto e consigli professionali.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Sezione Recensioni (app-reviews) -->
+<section class="reviews-section">
+  <app-reviews></app-reviews>
+</section>
+

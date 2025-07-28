@@ -1,0 +1,314 @@
+// src/app/pages/contatti/contatti.component.scss
+@use '../../../styles/variables' as vars;
+@use '../../../styles/mixins' as mixins;
+
+.contatti-container {
+  max-width: 900px;
+  margin: vars.$spacing-xl auto;
+  padding: 1.5rem; /* Padding per desktop */
+  background: vars.$color-white;
+  color: vars.$color-text-dark;
+  border-radius: vars.$border-radius-lg;
+  box-shadow: 0 8px 25px rgba(vars.$color-vibrant-fuchsia, 0.15);
+  border: 1px solid rgba(vars.$color-vibrant-fuchsia, 0.1);
+  font-family: vars.$font-family-primary;
+  text-align: center;
+}
+
+.page-title {
+  font-family: vars.$font-family-secondary;
+  font-size: 3rem;
+  color: vars.$color-vibrant-fuchsia;
+  margin-bottom: vars.$spacing-md;
+  text-shadow: 0 0 10px rgba(vars.$color-vibrant-fuchsia, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: vars.$spacing-sm;
+
+  .title-icon {
+    font-size: 3rem;
+    color: vars.$color-vibrant-fuchsia;
+  }
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: vars.$color-text-light;
+  margin-bottom: vars.$spacing-xl;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: vars.$line-height-base;
+}
+
+form.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: vars.$spacing-xl;
+
+  mat-form-field {
+    width: 100%;
+
+    .mat-form-field-outline {
+      color: rgba(vars.$color-vibrant-fuchsia, 0.5);
+    }
+
+    &.mat-focused .mat-form-field-outline {
+      color: vars.$color-vibrant-fuchsia;
+    }
+
+    .mat-form-field-label {
+      color: vars.$color-text-light !important;
+      font-family: vars.$font-family-primary;
+      font-size: 1rem;
+    }
+
+    input, textarea {
+      color: vars.$color-text-dark;
+      background-color: vars.$color-background-light;
+      font-family: vars.$font-family-primary;
+      caret-color: vars.$color-vibrant-fuchsia;
+      font-size: 1rem;
+      border-radius: vars.$border-radius-sm;
+      padding: 0.75rem;
+    }
+
+    .mat-error {
+      font-size: 0.85rem;
+      color: vars.$error-color;
+      font-family: vars.$font-family-primary;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .success-message, .error-message-ui {
+    margin: 1rem 0;
+    padding: 12px 20px;
+    font-weight: 600;
+    font-family: vars.$font-family-primary;
+    border-radius: vars.$border-radius-md;
+    text-align: center;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .success-message {
+    background-color: rgba(vars.$success-color, 0.1);
+    color: vars.$success-color;
+    box-shadow: 0 3px 10px rgba(vars.$success-color, 0.3);
+    border: 1px solid vars.$success-color;
+  }
+
+  .error-message-ui {
+    background-color: rgba(vars.$error-color, 0.1);
+    color: vars.$error-color;
+    box-shadow: 0 3px 10px rgba(vars.$error-color, 0.3);
+    border: 1px solid vars.$error-color;
+  }
+
+  button {
+    align-self: center;
+    width: 220px;
+    height: 55px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: vars.$font-family-primary;
+    border-radius: vars.$border-radius-xl;
+    text-transform: uppercase;
+
+    background-color: vars.$color-vibrant-fuchsia;
+    color: vars.$color-white;
+    box-shadow: 0 5px 20px rgba(vars.$color-vibrant-fuchsia, 0.4);
+
+    &[disabled] {
+      background-color: vars.$color-border;
+      color: vars.$color-text-light;
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: 0.7;
+    }
+
+    .button-loading-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      height: 100%;
+
+      mat-spinner {
+        margin: 0;
+        flex-shrink: 0;
+        ::ng-deep circle {
+          stroke: vars.$color-white !important;
+        }
+      }
+
+      span {
+        flex-grow: 1;
+        text-align: center;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      background-color: darken(vars.$color-vibrant-fuchsia, 10%);
+      box-shadow: 0 8px 30px rgba(vars.$color-vibrant-fuchsia, 0.7);
+      transform: translateY(-3px);
+      transition: all 0.3s ease;
+    }
+  }
+}
+
+/* --- Sezione Info Dirette --- */
+.direct-contact-info {
+  margin-top: vars.$spacing-xl;
+  text-align: center;
+
+  h2 {
+    font-family: vars.$font-family-secondary;
+    font-size: 2rem;
+    color: vars.$color-dark-purple-text;
+    margin-bottom: vars.$spacing-lg;
+  }
+
+  .contact-methods {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: vars.$spacing-sm;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .contact-method-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: vars.$spacing-md;
+    background-color: vars.$color-white;
+    border-radius: vars.$border-radius-md;
+    text-decoration: none;
+    color: vars.$color-text-dark;
+    transition: all vars.$transition-speed-normal vars.$transition-ease;
+    flex: 1 1 auto;
+    max-width: 180px;
+    min-width: 120px;
+
+    mat-icon, .fab {
+      font-size: 36px; /* Dimensione desktop */
+      color: vars.$color-vibrant-fuchsia;
+      margin-bottom: vars.$spacing-xs;
+    }
+
+    span {
+      font-size: 1rem;
+      font-weight: 500;
+      overflow-wrap: break-word;
+      text-align: center;
+    }
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(vars.$color-vibrant-fuchsia, 0.2);
+      color: vars.$color-vibrant-fuchsia;
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: vars.$breakpoint-lg) { /* 992px */
+  .contatti-container {
+    padding: 2rem;
+  }
+  .page-title {
+    font-size: 2.5rem;
+  }
+  .direct-contact-info h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: vars.$breakpoint-md) { /* 768px */
+  .contatti-container {
+    margin: vars.$spacing-xl auto;
+    padding: 1.5rem vars.$spacing-md; /* Riduci padding orizzontale */
+  }
+  .page-title {
+    font-size: 2rem;
+    flex-direction: column;
+    .title-icon {
+      font-size: 2.5rem;
+    }
+  }
+  .page-subtitle {
+    font-size: 1rem;
+    margin-bottom: vars.$spacing-xl;
+  }
+  form.contact-form {
+    gap: 1rem;
+    button {
+      width: 100%;
+      height: 50px;
+    }
+  }
+  .direct-contact-info {
+    margin-top: vars.$spacing-xl;
+    .contact-methods {
+      flex-direction: column; /* Già impostato, ma lo confermo */
+      gap: vars.$spacing-sm;
+      max-width: 100%; /* Occupa tutta la larghezza disponibile */
+    }
+    .contact-method-item {
+      width: 100%; /* Occupa tutta la larghezza disponibile */
+      max-width: none; /* Rimuovi max-width fisso */
+      padding: vars.$spacing-sm; /* Riduci padding interno degli item */
+      mat-icon, .fab {
+        font-size: 32px; /* Riduci dimensione icone */
+      }
+      span {
+        font-size: 0.95rem; /* Leggermente più piccolo */
+      }
+    }
+  }
+}
+
+@media (max-width: vars.$breakpoint-sm) { /* 576px */
+  .contatti-container {
+    padding: vars.$spacing-md vars.$spacing-xs; /* Riduci ulteriormente padding orizzontale */
+    margin: vars.$spacing-lg auto;
+  }
+  .page-title {
+    font-size: 1.8rem;
+    .title-icon {
+      font-size: 2rem;
+    }
+  }
+  .page-subtitle {
+    font-size: 0.9rem;
+  }
+  .direct-contact-info h2 {
+    font-size: 1.5rem;
+  }
+  .direct-contact-info .contact-method-item {
+    padding: vars.$spacing-xs; /* Padding minimo per gli item su schermi molto piccoli */
+    mat-icon, .fab {
+      font-size: 28px; /* Ulteriore riduzione dimensione icone */
+    }
+    span {
+      font-size: 0.8rem; /* Riduci la dimensione del font per l'email su schermi piccoli */
+    }
+  }
+}
+

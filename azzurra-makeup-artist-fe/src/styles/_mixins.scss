@@ -1,0 +1,60 @@
+// src/styles/_mixins.scss
+@import 'variables'; // Importa le variabili per usarle nei mixin
+
+// Mixin per centrare elementi con Flexbox
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Mixin per lo stile delle "card" (blocchi con ombra e bordi arrotondati)
+@mixin card-style($padding: $spacing-md, $shadow: $color-shadow-medium) {
+  background-color: $color-white;
+  border-radius: $border-radius-lg;
+  padding: $padding;
+  box-shadow: 0 4px 15px $shadow; // Ombra più pronunciata per le card
+  transition: transform $transition-speed-normal $transition-ease;
+
+  &:hover {
+    transform: translateY(-5px); // Effetto leggero al passaggio del mouse
+  }
+}
+
+// Mixin per rendere la dimensione del font responsive
+@mixin responsive-text($min-font, $max-font, $min-vw: 320px, $max-vw: 1200px) {
+  font-size: calc(#{$min-font} + (#{$max-font} - #{$min-font}) * ((100vw - #{$min-vw}) / (#{$max-vw} - #{$min-vw})));
+}
+
+// Mixin per titoli eleganti (usa il font secondario)
+@mixin elegant-heading {
+  font-family: $font-family-secondary;
+  font-weight: bold;
+  color: $color-accent; // Colore fucsia per i titoli importanti
+  text-transform: uppercase;
+  letter-spacing: 0.08em; // Spaziatura tra le lettere per un look raffinato
+}
+
+// Mixin per un pulsante con stile beauty
+@mixin beauty-button($bg-color: $color-accent, $text-color: $color-white) {
+  background-color: $bg-color;
+  color: $text-color;
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  font-size: $font-size-base;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background-color $transition-speed-normal $transition-ease, transform $transition-speed-normal $transition-ease;
+
+  &:hover {
+    background-color: darken($bg-color, 10%);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

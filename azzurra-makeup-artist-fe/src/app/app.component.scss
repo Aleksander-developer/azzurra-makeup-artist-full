@@ -1,0 +1,136 @@
+    /* src/app/app.component.scss */
+
+    // Importa le variabili globali dal tuo file _variables.scss
+    @use '../styles/variables' as vars;
+    @use '../styles/mixins' as mixins; // Assicurati che sia importato se usato
+
+    /*
+    * Stili applicati all'elemento radice dell'applicazione (<app-root>).
+    * Qui gestiamo l'immagine di sfondo e l'overlay.
+    */
+    :host {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Assicura che l'host occupi l'intera altezza del viewport */
+
+      // Stili per l'immagine di sfondo
+      // PERCORSO CORRETTO PER IMMAGINI IN 'src/assets/images/'
+      // background-image: url('../assets/sfondo/sfondo.png'); /* <-- MODIFICA QUI CON IL NOME ESATTO DEL TUO FILE (es. 'assets/images/sfondo.jpg') */
+      background-size: cover; /* Copre l'intera area, ritagliando se necessario */
+      background-position: center center; /* Centra l'immagine */
+      background-attachment: fixed; /* L'immagine rimane fissa mentre si scorre */
+      background-repeat: no-repeat; /* Non ripete l'immagine */
+
+      // Overlay bianco semi-trasparente per migliorare la leggibilità del testo
+      // Se non lo desideri, puoi rimuovere tutto il blocco &::before
+      &::before {
+        content: '';
+        position: absolute; /* Posizionato relativamente a :host */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.6); /* Overlay bianco semi-trasparente */
+        z-index: -1; /* Assicurati che l'overlay sia dietro il contenuto */
+      }
+    }
+
+    /*
+    * Stili globali per gli elementi HTML e body.
+    * Importante per rimuovere margini predefiniti e impostare il font-family.
+    * Questi stili dovrebbero idealmente essere in src/styles.scss, ma li includo qui
+    * per completezza se preferisci mantenerli in questo file.
+    */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%; // Assicura che html e body occupino l'intera altezza
+      font-family: vars.$font-family-primary; // Applica il font primario globalmente
+    }
+
+
+    /*
+    * Struttura Flexbox per il layout principale del contenuto dell'app.
+    * Questo assicura che il footer stia correttamente in fondo.
+    */
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Già gestito da :host, ma può essere ridondante qui o utile per il layout interno */
+    }
+
+    /*
+    * Contenuto principale dell'applicazione.
+    * Si espande per spingere il footer in basso.
+    */
+    .main-content {
+      flex-grow: 1; // Permette al main-content di espandersi e spingere il footer in basso
+      min-height: calc(100vh - 64px); /* 64px è l’altezza tipica della mat-toolbar */
+      // Il padding e il colore del testo per il contenuto generale possono essere gestiti qui o nei singoli componenti
+      // padding: vars.$spacing-xl;
+      // color: vars.$color-text-dark;
+    }
+
+
+    /*
+    * ===============================================================
+    * Stili per il pulsante "Scroll to Top"
+    * ===============================================================
+    */
+    .scroll-to-top-button {
+      position: fixed;
+
+      /* --- POSIZIONAMENTO ORIZZONTALE --- */
+      right: 20px;
+      left: auto;
+      // bottom: 20px; /* Rimosso, ora gestito da [style.bottom.px] in app.component.ts */
+
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(100px);
+      transition: opacity 0.3s ease-out, transform 0.3s ease-out, bottom 0.3s ease-out;
+
+      // Usa le variabili globali
+      background-color: vars.$color-vibrant-fuchsia;
+      box-shadow: 0px 5px 15px rgba(vars.$color-vibrant-fuchsia, 0.4);
+      border-radius: 50%;
+      border: 1px solid rgba(vars.$color-vibrant-fuchsia, 0.6);
+    }
+
+    /* Visibilità del pulsante */
+    .scroll-to-top-button.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Effetto hover */
+    .scroll-to-top-button:hover {
+      background-color: darken(vars.$color-vibrant-fuchsia, 10%);
+      box-shadow: 0px 8px 20px rgba(vars.$color-vibrant-fuchsia, 0.6);
+      transform: translateY(-2px);
+    }
+
+    /* Icona interna */
+    .scroll-to-top-button mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      color: vars.$color-white;
+      text-shadow: 0 0 5px rgba(vars.$color-white, 0.7), 0 0 10px rgba(vars.$color-vibrant-fuchsia, 0.5);
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    /* Stili per mobile */
+    @media (max-width: vars.$breakpoint-md) {
+      .scroll-to-top-button {
+        right: 15px;
+        width: 48px;
+        height: 48px;
+      }
+      .scroll-to-top-button mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+    

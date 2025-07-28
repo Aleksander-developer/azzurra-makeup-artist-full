@@ -1,0 +1,86 @@
+<!-- src/app/pages/contatti/contatti.component.html -->
+
+<section class="contatti-container mat-elevation-z4">
+  <h1 class="page-title">
+    <mat-icon class="title-icon">brush</mat-icon> <span i18n="@@contattiTitle">Contatti</span>
+  </h1>
+  <p class="page-subtitle" i18n="@@contattiSubtitle">
+    Compila il modulo sottostante o contattami direttamente per qualsiasi domanda o per prenotare una consulenza.
+  </p>
+
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+    <mat-form-field appearance="outline">
+      <mat-label i18n="@@contattiFormNameLabel">Nome</mat-label>
+      <input matInput i18n-placeholder="@@contattiFormNamePlaceholder" placeholder="Il tuo nome" formControlName="nome" />
+      <mat-error *ngIf="contactForm.get('nome')?.invalid && contactForm.get('nome')?.touched" i18n="@@contattiFormNameError">
+        Il nome è obbligatorio e deve avere almeno 2 caratteri.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label i18n="@@contattiFormEmailLabel">Email</mat-label>
+      <input matInput type="email" i18n-placeholder="@@contattiFormEmailPlaceholder" placeholder="La tua email" formControlName="email" />
+      <mat-error *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" i18n="@@contattiFormEmailError">
+        Inserisci un'email valida.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label i18n="@@contattiFormPhoneLabel">Cellulare (opzionale)</mat-label>
+      <input matInput type="tel" i18n-placeholder="@@contattiFormPhonePlaceholder" placeholder="Il tuo numero di cellulare" formControlName="cellulare" />
+      <mat-error *ngIf="contactForm.get('cellulare')?.invalid && contactForm.get('cellulare')?.touched" i18n="@@contattiFormPhoneError">
+        Inserisci un numero di cellulare valido.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label i18n="@@contattiFormMessageLabel">Messaggio</mat-label>
+      <textarea matInput rows="6" i18n-placeholder="@@contattiFormMessagePlaceholder" placeholder="Scrivi qui il tuo messaggio..." formControlName="messaggio"></textarea>
+      <mat-error *ngIf="contactForm.get('messaggio')?.invalid && contactForm.get('messaggio')?.touched" i18n="@@contattiFormMessageError">
+        Il messaggio è obbligatorio e deve avere almeno 10 caratteri.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Messaggio di successo -->
+    <div *ngIf="successMessage" class="success-message">
+      <mat-icon>check_circle_outline</mat-icon> <span i18n="@@contattiFormSuccessMessage">Messaggio inviato con successo!</span>
+    </div>
+
+    <!-- Messaggio di errore (se presente) -->
+    <div *ngIf="errorMessage" class="error-message-ui">
+      <mat-icon>error_outline</mat-icon> <span i18n="@@contattiFormErrorMessage">Errore durante l'invio del messaggio. Riprova.</span>
+    </div>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="contactForm.invalid || isLoading"
+            i18n-aria-label="@@contattiFormButtonSendAria">
+      <div *ngIf="isLoading" class="button-loading-content">
+        <mat-spinner diameter="20"></mat-spinner>
+        <span i18n="@@contattiFormButtonSending">Invio...</span>
+      </div>
+      <ng-container *ngIf="!isLoading">
+        <span i18n="@@contattiFormButtonSend">Invia Messaggio</span>
+      </ng-container>
+    </button>
+  </form>
+
+  <!-- Sezione Info Dirette -->
+  <div class="direct-contact-info">
+    <h2 i18n="@@contattiDirectContactHeading">Contattami Direttamente</h2>
+    <div class="contact-methods">
+      <a href="tel:+39 346 960 4243" class="contact-method-item mat-elevation-z2" i18n-aria-label="@@contattiDirectContactPhoneAria">
+        <mat-icon>phone</mat-icon>
+        <span i18n="@@contattiDirectContactPhone">Telefono</span>
+      </a>
+      <a href="mailto:azzurraangius95@gmail.com" class="contact-method-item mat-elevation-z2" i18n-aria-label="@@contattiDirectContactEmailAria">
+        <mat-icon>email</mat-icon>
+        <span i18n="@@contattiDirectContactEmail">Email</span>
+      </a>
+      <a href="https://wa.me/393469604243" target="_blank" class="contact-method-item mat-elevation-z2" i18n-aria-label="@@contattiDirectContactWhatsappAria">
+        <mat-icon>chat</mat-icon> <!-- Sostituito fab fa-whatsapp con mat-icon -->
+        <span i18n="@@contattiDirectContactWhatsapp">WhatsApp</span>
+      </a>
+    </div>
+  </div>
+
+</section>
+

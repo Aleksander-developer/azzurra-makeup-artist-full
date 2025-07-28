@@ -1,0 +1,41 @@
+<!-- src/app/shared/components/footer/footer.component.html -->
+<footer class="footer-container">
+  <div class="footer-socials">
+    <!-- Rimosso GitHub se non hai un link -->
+    <!-- <a [href]="githubUrl" target="_blank" aria-label="GitHub" mat-icon-button>
+      <mat-icon>code</mat-icon>
+    </a> -->
+    <a [href]="'mailto:' + emailAddress" i18n-aria-label="@@footerEmailAria" aria-label="Invia Email" mat-icon-button>
+      <mat-icon>email</mat-icon>
+    </a>
+    <a [href]="linkedinUrl" target="_blank" i18n-aria-label="@@footerLinkedinAria" aria-label="LinkedIn" mat-icon-button>
+      <mat-icon>person</mat-icon> <!-- Icona generica per LinkedIn -->
+    </a>
+    <a [href]="instagramUrl" target="_blank" i18n-aria-label="@@footerInstagramAria" aria-label="Instagram" mat-icon-button>
+      <mat-icon>camera_alt</mat-icon> <!-- Icona generica per Instagram -->
+    </a>
+    <a [href]="facebookUrl" target="_blank" i18n-aria-label="@@footerFacebookAria" aria-label="Facebook" mat-icon-button>
+      <mat-icon>group</mat-icon> <!-- Icona generica per Facebook -->
+    </a>
+    <a [href]="whatsappLink" target="_blank" i18n-aria-label="@@footerWhatsappAria" aria-label="WhatsApp" mat-icon-button>
+      <mat-icon>chat</mat-icon> <!-- Icona generica per WhatsApp -->
+    </a>
+    <a [href]="'tel:' + phoneNumber" i18n-aria-label="@@footerPhoneAria" aria-label="Chiama" mat-icon-button>
+      <mat-icon>phone</mat-icon>
+    </a>
+  </div>
+
+  <div class="footer-separator"></div>
+
+  <div class="footer-bottom-bar">
+    <div class="footer-copyright">
+      <span i18n="@@footerCopyright">
+        Copyright © {{ currentYear }} Azzurra Angius Make-up Artist.
+        <span class="developer-credit">
+          Realizzato da <a [href]="developerWebsiteUrl" target="_blank" rel="noopener noreferrer">Aleksander Nikolli</a>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+

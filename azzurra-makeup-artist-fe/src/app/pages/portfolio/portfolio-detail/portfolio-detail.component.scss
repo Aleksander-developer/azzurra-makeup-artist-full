@@ -1,0 +1,427 @@
+/* src/app/pages/portfolio/portfolio-detail/portfolio-detail.component.scss */
+
+@use '../../../../styles/variables' as vars;
+@use '../../../../styles/mixins' as mixins;
+
+.portfolio-detail-container {
+  padding: vars.$spacing-xl vars.$spacing-lg; /* Padding per desktop */
+  max-width: 1000px;
+  margin: vars.$spacing-xxl auto;
+  background-color: rgba(vars.$color-background-light, 0.95);
+  border-radius: vars.$border-radius-lg;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  color: vars.$color-text-dark;
+  font-family: vars.$font-family-primary;
+  text-align: center;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  top: vars.$spacing-lg;
+  left: vars.$spacing-lg;
+  background-color: vars.$color-accent;
+  color: vars.$color-white;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease;
+  z-index: 10;
+
+  &:hover {
+    background-color: darken(vars.$color-accent, 10%);
+  }
+
+  mat-icon {
+    font-size: 24px;
+  }
+}
+
+.loading-spinner, .no-item-found, .error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: vars.$spacing-xxl;
+  color: vars.$color-text-light;
+  font-size: 1.1rem;
+  background-color: vars.$color-background-light;
+  border-radius: vars.$border-radius-lg;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  mat-spinner {
+    margin-bottom: vars.$spacing-md;
+  }
+
+  mat-icon {
+    font-size: 48px;
+    color: vars.$color-accent;
+    margin-bottom: vars.$spacing-md;
+  }
+}
+
+.error-message {
+  background-color: #ffe0b2; // Light orange for errors
+  color: #e65100; // Dark orange for error text
+}
+
+.portfolio-content {
+  text-align: left;
+  padding: vars.$spacing-md; /* Padding per desktop */
+
+  .item-title {
+    font-family: vars.$font-family-secondary;
+    font-size: 2.8rem;
+    color: vars.$color-dark-purple-text;
+    margin-bottom: vars.$spacing-xs;
+    text-align: center;
+  }
+
+  .item-subtitle {
+    font-size: 1.4rem;
+    color: vars.$color-text-light;
+    margin-bottom: vars.$spacing-md;
+    text-align: center;
+  }
+
+  .item-category {
+    display: inline-block;
+    background-color: vars.$color-light-pink-bg;
+    color: vars.$color-dark-pink-text;
+    padding: 0.5rem 1rem;
+    border-radius: vars.$border-radius-md;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: vars.$spacing-lg;
+    text-align: center;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .item-description {
+    font-size: 1.1rem;
+    line-height: vars.$line-height-lg;
+    color: vars.$color-text-dark;
+    margin-bottom: vars.$spacing-xxl;
+    text-align: justify;
+  }
+
+  .image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Desktop default */
+    gap: vars.$spacing-lg;
+    margin-top: vars.$spacing-xxl;
+    padding-top: vars.$spacing-xl;
+    border-top: 1px solid vars.$color-border;
+    justify-content: center;
+  }
+
+  .gallery-image-item {
+    background-color: vars.$color-white;
+    border-radius: vars.$border-radius-md;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 250px; /* Altezza fissa per le immagini */
+      object-fit: cover;
+      display: block;
+    }
+
+    .image-description {
+      padding: vars.$spacing-md;
+      font-size: 0.95rem;
+      color: vars.$color-text-light;
+      text-align: center;
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .fullscreen-icon {
+      position: absolute;
+      bottom: vars.$spacing-sm;
+      right: vars.$spacing-sm;
+      background-color: rgba(vars.$color-dark-purple-text, 0.7);
+      color: vars.$color-white;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+
+      .gallery-image-item:hover & {
+        opacity: 1;
+      }
+    }
+  }
+
+  .item-dates {
+    margin-top: vars.$spacing-xxl;
+    border-top: 1px solid vars.$color-border;
+    padding-top: vars.$spacing-lg;
+    font-size: 0.9rem;
+    color: vars.$color-text-light;
+    text-align: right;
+
+    p {
+      margin: 0;
+    }
+  }
+}
+
+// Stili per il visualizzatore fullscreen
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.fullscreen-image {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  border-radius: vars.$border-radius-md;
+  cursor: default;
+}
+
+.fullscreen-close-button {
+  position: absolute;
+  top: vars.$spacing-lg;
+  right: vars.$spacing-lg;
+  background-color: rgba(vars.$color-accent, 0.8);
+  color: vars.$color-white;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  z-index: 1001;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: darken(vars.$color-accent, 10%);
+  }
+}
+
+.fullscreen-nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(vars.$color-dark-purple-text, 0.7);
+  color: vars.$color-white;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  z-index: 1001;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: vars.$color-dark-purple-text;
+  }
+
+  &.prev {
+    left: vars.$spacing-lg;
+  }
+
+  &.next {
+    right: vars.$spacing-lg;
+  }
+}
+
+
+/* Responsive adjustments */
+@media (max-width: vars.$breakpoint-lg) { /* 992px */
+  .portfolio-detail-container {
+    padding: vars.$spacing-lg vars.$spacing-md; /* Riduci padding orizzontale */
+    margin-top: vars.$spacing-xl;
+  }
+  .back-button {
+    top: vars.$spacing-md;
+    left: vars.$spacing-md;
+  }
+  .portfolio-content {
+    .item-title {
+      font-size: 2.2rem;
+    }
+    .item-subtitle {
+      font-size: 1.2rem;
+    }
+    .item-description {
+      font-size: 1rem;
+    }
+    .image-gallery {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: vars.$spacing-md;
+    }
+    .gallery-image-item .gallery-image {
+      height: 200px;
+    }
+  }
+  .fullscreen-close-button {
+    width: 48px;
+    height: 48px;
+    font-size: 28px;
+  }
+  .fullscreen-nav-button { /* Adatta anche i pulsanti di navigazione fullscreen */
+    width: 48px;
+    height: 48px;
+    font-size: 28px;
+    &.prev {
+      left: vars.$spacing-md;
+    }
+    &.next {
+      right: vars.$spacing-md;
+    }
+  }
+}
+
+@media (max-width: vars.$breakpoint-md) { /* 768px */
+  .portfolio-detail-container {
+    padding: vars.$spacing-md vars.$spacing-sm; /* Riduci ulteriormente padding orizzontale */
+    margin: vars.$spacing-lg auto;
+  }
+  .back-button {
+    top: vars.$spacing-sm;
+    left: vars.$spacing-sm;
+    width: 40px;
+    height: 40px;
+    mat-icon {
+      font-size: 20px;
+    }
+  }
+  .portfolio-content {
+    .item-title {
+      font-size: 1.8rem;
+    }
+    .item-subtitle {
+      font-size: 1rem;
+    }
+    .item-description {
+      font-size: 0.95rem;
+      text-align: left; /* Mantieni giustificato o allinea a sinistra per leggibilità */
+    }
+    .image-gallery {
+      grid-template-columns: 1fr; /* Una singola colonna su mobile */
+      gap: vars.$spacing-md;
+    }
+    .gallery-image-item .gallery-image {
+      height: 180px;
+    }
+    .gallery-image-item .image-description {
+      font-size: 0.85rem; /* Riduci dimensione descrizione immagine */
+    }
+  }
+  .fullscreen-close-button {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    top: vars.$spacing-md;
+    right: vars.$spacing-md;
+  }
+  .fullscreen-nav-button { /* Adatta anche i pulsanti di navigazione fullscreen */
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    &.prev {
+      left: vars.$spacing-sm;
+    }
+    &.next {
+      right: vars.$spacing-sm;
+    }
+  }
+  .fullscreen-image {
+    max-width: 95vw;
+    max-height: 85vh;
+  }
+}
+
+@media (max-width: vars.$breakpoint-sm) { /* 576px */
+  .portfolio-detail-container {
+    padding: vars.$spacing-md vars.$spacing-xs; /* Padding minimo per schermi molto piccoli */
+    margin: vars.$spacing-lg auto;
+  }
+  .back-button {
+    top: vars.$spacing-xs; /* Sposta più in alto */
+    left: vars.$spacing-xs; /* Sposta più a sinistra */
+    width: 36px; /* Riduci ulteriormente */
+    height: 36px;
+    mat-icon {
+      font-size: 18px;
+    }
+  }
+  .portfolio-content {
+    .item-title {
+      font-size: 1.6rem;
+    }
+    .item-subtitle {
+      font-size: 0.9rem;
+    }
+    .item-description {
+      font-size: 0.85rem;
+    }
+    .gallery-image-item .gallery-image {
+      height: 160px; /* Riduci ulteriormente altezza immagine */
+    }
+    .gallery-image-item .image-description {
+      padding: vars.$spacing-sm; /* Riduci padding descrizione immagine */
+      font-size: 0.8rem;
+    }
+  }
+  .fullscreen-close-button {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    top: vars.$spacing-xs; /* Sposta più in alto */
+    right: vars.$spacing-xs; /* Sposta più a destra */
+  }
+  .fullscreen-nav-button {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    &.prev {
+      left: vars.$spacing-xs;
+    }
+    &.next {
+      right: vars.$spacing-xs;
+    }
+  }
+}

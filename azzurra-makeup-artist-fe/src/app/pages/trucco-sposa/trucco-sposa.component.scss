@@ -1,0 +1,389 @@
+/* src/app/pages/trucco-sposa/trucco-sposa.component.scss */
+
+@use '../../../styles/variables' as vars;
+@use '../../../styles/mixins' as mixins;
+
+.trucco-sposa-container {
+  padding: vars.$spacing-xl vars.$spacing-lg; /* Padding per desktop */
+  max-width: 1200px;
+  margin: vars.$spacing-xxl auto;
+  background-color: rgba(vars.$color-background-light, 0.95);
+  border-radius: vars.$border-radius-lg;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  color: vars.$color-text-dark;
+  font-family: vars.$font-family-primary;
+  text-align: center;
+}
+
+.page-title {
+  font-family: vars.$font-family-secondary;
+  font-size: 3rem;
+  color: vars.$color-vibrant-fuchsia;
+  margin-bottom: vars.$spacing-md;
+  text-shadow: 0 0 10px rgba(vars.$color-vibrant-fuchsia, 0.4);
+}
+
+.page-subtitle {
+  font-size: 1.2rem;
+  color: vars.$color-text-light;
+  margin-bottom: vars.$spacing-xxl;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: vars.$line-height-base;
+}
+
+/* --- Sezione Pacchetto "Seguimi" (In Evidenza) --- */
+.package-highlight-card {
+  display: flex;
+  flex-direction: row; /* Desktop: contenuto a sinistra, immagine a destra */
+  align-items: center;
+  gap: vars.$spacing-xl;
+  background: linear-gradient(135deg, vars.$color-light-pink-bg 0%, lighten(vars.$color-light-pink-bg, 5%) 100%);
+  border: 1px solid rgba(vars.$color-vibrant-fuchsia, 0.3);
+  border-radius: vars.$border-radius-xl;
+  padding: vars.$spacing-xxl; /* Padding generoso per desktop */
+  margin-bottom: vars.$spacing-xxl;
+  box-shadow: 0 10px 30px rgba(vars.$color-vibrant-fuchsia, 0.3);
+  text-align: left;
+
+  .highlight-content {
+    flex: 1;
+    padding-right: vars.$spacing-lg;
+  }
+
+  .highlight-title {
+    font-family: vars.$font-family-secondary;
+    font-size: 2.8rem;
+    color: vars.$color-vibrant-fuchsia;
+    margin-bottom: vars.$spacing-md;
+    text-shadow: 0 0 12px rgba(vars.$color-vibrant-fuchsia, 0.5);
+  }
+
+  .highlight-description {
+    font-size: 1.2rem;
+    line-height: vars.$line-height-base;
+    color: vars.$color-dark-purple-text;
+    margin-bottom: vars.$spacing-lg;
+  }
+
+  .highlight-features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: vars.$spacing-xl;
+    li {
+      display: flex;
+      align-items: center;
+      margin-bottom: vars.$spacing-xs;
+      font-size: 1.1rem;
+      color: vars.$color-text-dark;
+      mat-icon {
+        color: vars.$color-vibrant-fuchsia;
+        margin-right: vars.$spacing-xs;
+        font-size: 20px; /* Dimensione icona desktop */
+      }
+    }
+  }
+
+  .highlight-image-container {
+    flex-shrink: 0;
+    width: 45%;
+    max-width: 500px;
+    border-radius: vars.$border-radius-xl;
+    overflow: hidden;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .highlight-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  button {
+    font-size: 1.2rem;
+    padding: vars.$spacing-sm vars.$spacing-lg;
+    border-radius: vars.$border-radius-xl;
+    transition: all vars.$transition-speed-normal vars.$transition-ease;
+    mat-icon {
+      margin-left: vars.$spacing-xs;
+      font-size: 20px;
+    }
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(vars.$color-vibrant-fuchsia, 0.5);
+    }
+  }
+}
+
+/* --- Sezione Pacchetto "Trucco Sposa Normale" --- */
+.package-card {
+  display: flex;
+  flex-direction: row-reverse; /* Immagine a sinistra, contenuto a destra */
+  align-items: center;
+  gap: vars.$spacing-xl;
+  background-color: vars.$color-white;
+  border: 1px solid rgba(vars.$color-secondary, 0.3);
+  border-radius: vars.$border-radius-lg;
+  padding: vars.$spacing-xl; /* Padding generoso per desktop */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: left;
+
+  .package-content {
+    flex: 1;
+    padding-left: vars.$spacing-lg;
+  }
+
+  .package-title {
+    font-family: vars.$font-family-secondary;
+    font-size: 2.2rem;
+    color: vars.$color-dark-purple-text;
+    margin-bottom: vars.$spacing-md;
+  }
+
+  .package-description {
+    font-size: 1.1rem;
+    line-height: vars.$line-height-base;
+    color: vars.$color-text-dark;
+    margin-bottom: vars.$spacing-lg;
+  }
+
+  .package-features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: vars.$spacing-xl;
+    li {
+      display: flex;
+      align-items: center;
+      margin-bottom: vars.$spacing-xs;
+      font-size: 1rem;
+      color: vars.$color-text-dark;
+      mat-icon {
+        color: vars.$color-secondary;
+        margin-right: vars.$spacing-xs;
+        font-size: 18px; /* Dimensione icona desktop */
+      }
+    }
+  }
+
+  .package-image-container {
+    flex-shrink: 0;
+    width: 45%;
+    max-width: 500px;
+    border-radius: vars.$border-radius-lg;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .package-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  button {
+    font-size: 1.1rem;
+    padding: vars.$spacing-sm vars.$spacing-lg;
+    border-radius: vars.$border-radius-md;
+    transition: all vars.$transition-speed-normal vars.$transition-ease;
+    mat-icon {
+      margin-left: vars.$spacing-xs;
+      font-size: 20px;
+    }
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(vars.$color-primary, 0.3);
+    }
+  }
+}
+
+/* --- Call to Action Finale --- */
+.cta-section {
+  background: linear-gradient(45deg, vars.$color-primary 0%, darken(vars.$color-primary, 10%) 100%);
+  color: vars.$color-text-dark;
+  text-align: center;
+  padding: vars.$spacing-xxl vars.$spacing-lg; /* Padding generoso per desktop */
+  margin-top: vars.$spacing-xxl;
+  border-radius: vars.$border-radius-xl;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0px 8px 25px rgba(vars.$color-primary, 0.4);
+
+  h2 {
+    font-family: vars.$font-family-secondary;
+    font-size: 2.5rem;
+    margin-bottom: vars.$spacing-md;
+    color: vars.$color-dark-pink-text;
+  }
+  p {
+    font-size: 1.3rem;
+    margin-bottom: vars.$spacing-xl;
+    color: vars.$color-text-dark;
+  }
+  button {
+    font-size: 1.3rem;
+    padding: 1rem 3rem;
+    border-radius: vars.$border-radius-xl;
+    background-color: vars.$color-vibrant-fuchsia;
+    color: vars.$color-white;
+    border: 2px solid vars.$color-vibrant-fuchsia;
+    transition: all vars.$transition-speed-normal vars.$transition-ease;
+
+    &:hover {
+      background-color: lighten(vars.$color-vibrant-fuchsia, 10%);
+      color: vars.$color-white;
+      box-shadow: 0 0 20px rgba(vars.$color-vibrant-fuchsia, 0.5);
+    }
+  }
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: vars.$breakpoint-lg) { /* 992px */
+  .trucco-sposa-container {
+    padding: vars.$spacing-lg vars.$spacing-md; /* Riduci padding orizzontale */
+    margin-top: vars.$spacing-xl;
+  }
+  .page-title {
+    font-size: 2.5rem;
+  }
+  .highlight-title {
+    font-size: 2.2rem;
+  }
+  .package-title {
+    font-size: 1.8rem;
+  }
+  .highlight-description, .package-description {
+    font-size: 1rem;
+  }
+  .package-highlight-card, .package-card {
+    flex-direction: column; /* Stack colonne su schermi medi */
+    padding: vars.$spacing-xl; /* Mantieni padding interno generoso */
+    gap: vars.$spacing-lg; /* Riduci gap */
+    .highlight-content, .package-content {
+      padding-right: 0;
+      padding-left: 0;
+      text-align: center;
+    }
+    .highlight-image-container, .package-image-container {
+      width: 80%; /* Immagine più grande in modalità colonna */
+      max-width: 500px;
+      margin-top: vars.$spacing-lg;
+    }
+  }
+  .cta-section {
+    padding: vars.$spacing-xl vars.$spacing-md;
+    h2 {
+      font-size: 2rem;
+    }
+    p {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+@media (max-width: vars.$breakpoint-md) { /* 768px */
+  .trucco-sposa-container {
+    padding: vars.$spacing-md vars.$spacing-sm; /* Riduci ulteriormente padding orizzontale */
+    margin-top: vars.$spacing-lg;
+  }
+  .page-title {
+    font-size: 2rem;
+  }
+  .page-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: vars.$spacing-lg;
+  }
+  .package-highlight-card, .package-card {
+    padding: vars.$spacing-lg vars.$spacing-md; /* Riduci padding interno */
+    gap: vars.$spacing-md;
+    .highlight-title {
+      font-size: 1.8rem;
+    }
+    .package-title {
+      font-size: 1.6rem;
+    }
+    .highlight-description, .package-description {
+      font-size: 0.9rem;
+    }
+    .highlight-features li, .package-features li {
+      font-size: 0.9rem; /* Riduci dimensione font per le feature */
+      mat-icon {
+        font-size: 18px; /* Riduci dimensione icona */
+      }
+    }
+    .highlight-image-container, .package-image-container {
+      width: 90%; /* Occupa più larghezza */
+      max-width: none; /* Rimuovi max-width fisso */
+    }
+    button {
+      font-size: 1rem;
+      padding: vars.$spacing-sm vars.$spacing-md;
+    }
+  }
+  .cta-section {
+    padding: vars.$spacing-lg vars.$spacing-sm; /* Riduci padding CTA */
+    h2 {
+      font-size: 2rem;
+    }
+    p {
+      font-size: 1rem;
+    }
+    button {
+      font-size: 1rem;
+      padding: 0.8rem 2rem;
+    }
+  }
+}
+
+@media (max-width: vars.$breakpoint-sm) { /* 576px */
+  .trucco-sposa-container {
+    padding: vars.$spacing-md vars.$spacing-xs;
+    margin: vars.$spacing-lg auto;
+  }
+  .page-title {
+    font-size: 1.8rem;
+  }
+  .page-subtitle {
+    font-size: 0.85rem;
+  }
+  .package-highlight-card, .package-card {
+    padding: vars.$spacing-md vars.$spacing-xs; /* Padding minimo interno */
+    gap: vars.$spacing-sm;
+    .highlight-title {
+      font-size: 1.5rem;
+    }
+    .package-title {
+      font-size: 1.3rem;
+    }
+    .highlight-description, .package-description {
+      font-size: 0.85rem;
+    }
+    .highlight-features li, .package-features li {
+      font-size: 0.8rem; /* Ulteriore riduzione per le feature */
+      mat-icon {
+        font-size: 16px; /* Ulteriore riduzione icona */
+      }
+    }
+    .highlight-image-container, .package-image-container {
+      width: 100%; /* Piena larghezza */
+    }
+    button {
+      font-size: 0.9rem;
+      padding: vars.$spacing-xs vars.$spacing-sm;
+    }
+  }
+  .cta-section {
+    padding: vars.$spacing-md vars.$spacing-xs;
+    h2 {
+      font-size: 1.5rem;
+    }
+    p {
+      font-size: 0.85rem;
+    }
+    button {
+      font-size: 0.9rem;
+      padding: 0.7rem 1.5rem;
+    }
+  }
+}

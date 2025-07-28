@@ -1,0 +1,34 @@
+<!-- src/app/app.component.html -->
+
+<!-- 1. Aggiungiamo un contenitore principale che useremo per il layout flexbox -->
+<div class="app-container">
+  <!-- Navbar Component -->
+  <!-- Assicurati che app-navbar sia disponibile tramite SharedModule -->
+  <app-navbar></app-navbar>
+
+  <!-- Contenuto principale dell'applicazione -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer Component -->
+  <!-- Il riferimento #footerRef rimane qui -->
+  <!-- Assicurati che app-footer sia disponibile tramite SharedModule -->
+  <app-footer #footerRef></app-footer>
+  <!-- RIMOSSO: <app-cookie-consent></app-cookie-consent> -->
+</div>
+
+<!-- Il pulsante rimane fuori dal contenitore per mantenere position:fixed rispetto alla viewport -->
+<button
+  mat-fab
+  color="accent"
+  class="scroll-to-top-button"
+  [class.visible]="showScrollButton"
+  [class.over-footer]="isButtonOverFooter"
+  (click)="scrollToTop()"
+  i18n-aria-label="@@scrollToTopAria" aria-label="Scroll to top"
+  [style.bottom.px]="scrollButtonBottom"
+>
+  <mat-icon>arrow_upward</mat-icon>
+</button>
+

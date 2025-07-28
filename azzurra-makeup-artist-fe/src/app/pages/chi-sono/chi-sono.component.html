@@ -1,0 +1,57 @@
+<!-- src/app/pages/chi-sono/chi-sono.component.html -->
+
+<section class="chi-sono-container">
+  <h1 class="page-title" i18n="@@chiSonoTitle">Chi Sono</h1>
+  <p class="page-subtitle" i18n="@@chiSonoSubtitle">
+    Sono una make-up artist e hair stylist con una passione profonda per il mondo della bellezza e della creatività.
+  </p>
+
+  <!-- Sezione Introduzione e Filosofia -->
+  <div class="about-me-section mat-elevation-z4">
+    <div class="about-me-image-container">
+      <!-- Ho usato una placeholder image per immagine.png, se hai l'immagine reale, usa il percorso corretto -->
+      <img src="assets/Senza titolo.jpg" alt="Azzurra Angius" class="about-me-image"
+           onerror="this.onerror=null; this.src='https://placehold.co/500x600/F8C8DC/4A2A4A?text=Azzurra+Angius';">
+    </div>
+    <div class="about-me-content">
+      <h2 class="section-heading" i18n="@@chiSonoVisionHeading">La Mia Visione e Filosofia</h2>
+      <p i18n="@@chiSonoVisionParagraph1">
+        Credo che il make-up sia un'arte che va oltre la semplice applicazione di prodotti: è un mezzo per esprimere la propria personalità, celebrare la propria unicità e aumentare la fiducia in sé stessi.
+      </p>
+      <p i18n="@@chiSonoVisionParagraph2">
+        Il mio approccio è sempre personalizzato: ascolto attentamente le tue esigenze e i tuoi desideri per creare un look che non solo ti valorizzi, ma che ti faccia sentire autenticamente te stessa.
+      </p>
+      <p i18n="@@chiSonoVisionParagraph3">
+        Che tu stia cercando un trucco naturale per il giorno o un look più audace per un evento speciale, il mio obiettivo è farti risplendere, esaltando la tua bellezza intrinseca con professionalità e creatività.
+      </p>
+    </div>
+  </div>
+
+  <!-- Sezione Formazione e Qualifiche -->
+  <div class="qualifications-section mat-elevation-z4">
+    <h2 class="section-heading" i18n="@@chiSonoTrainingHeading">Formazione e Qualifiche</h2>
+    <div class="qualification-item">
+      <mat-icon class="qualification-icon">school</mat-icon>
+      <p i18n="@@chiSonoTrainingParagraph1">
+        Ho perfezionato le mie competenze frequentando corsi e workshop con i migliori professionisti del settore, acquisendo tecniche all'avanguardia nel trucco sposa, cerimonia, fotografico e cinematografico.
+      </p>
+    </div>
+    <div class="qualification-item">
+      <mat-icon class="qualification-icon">stars</mat-icon>
+      <p i18n="@@chiSonoTrainingParagraph2">
+        La mia formazione continua è una priorità, per essere sempre aggiornata sulle ultime tendenze e offrire servizi innovativi e di alta qualità.
+      </p>
+    </div>
+  </div>
+
+  <!-- Call to Action Finale -->
+  <div class="cta-section mat-elevation-z4">
+    <h2 i18n="@@chiSonoCtaHeading">Pronta a Trasformare la Tua Bellezza?</h2>
+    <p i18n="@@chiSonoCtaDescription">Contattami oggi stesso per una consulenza personalizzata e scopri come posso aiutarti a realizzare il look dei tuoi sogni.</p>
+    <button mat-raised-button color="accent" routerLink="/contatti" i18n-aria-label="@@chiSonoCtaButtonAria" i18n="@@chiSonoCtaButton">
+      Prenota la Tua Consulenza
+      <mat-icon>event</mat-icon>
+    </button>
+  </div>
+</section>
+

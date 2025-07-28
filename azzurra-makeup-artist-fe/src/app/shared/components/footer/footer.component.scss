@@ -1,0 +1,124 @@
+    // src/app/shared/components/footer/footer.component.scss
+
+    @use '../../../../styles/variables' as vars;
+    @use '../../../../styles/mixins' as mixins;
+
+    /* --- Layout Principale del Footer --- */
+    .footer-container {
+      // --- NUOVI STILI PER LO SFONDO CON IMMAGINE ---
+      background-image: url('../../../../assets/sfondo.png'); // Percorso alla tua immagine
+      background-size: 150px auto; // Rendi l'immagine piccola (es. 150px di larghezza, altezza automatica)
+      background-repeat: repeat; // Ripeti l'immagine per coprire lo sfondo
+      background-position: center center; // Centra l'immagine iniziale
+      position: relative;
+      overflow: hidden;
+
+      // Overlay scuro per migliorare il contrasto del testo
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(vars.$color-text-dark, 0.7); // Overlay scuro (70% opacità)
+        z-index: -1; // Metti l'overlay dietro il contenuto del footer
+      }
+      // --- FINE NUOVI STILI SFONDO CON IMMAGINE ---
+
+      color: vars.$color-white; // Colore del testo chiaro per contrasto
+      font-family: vars.$font-family-primary;
+      padding: vars.$spacing-lg vars.$spacing-md;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: vars.$spacing-lg;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.25);
+      border-top: 1px solid rgba(vars.$color-accent, 0.2);
+    }
+
+    /* --- Sezione Icone Social --- */
+    .footer-socials {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: vars.$spacing-md;
+
+      a {
+        color: vars.$color-vibrant-fuchsia; // Rendi le icone fucsia per contrasto
+        font-size: 26px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform vars.$transition-speed-normal ease, color vars.$transition-speed-normal ease, text-shadow vars.$transition-speed-normal ease;
+
+        i, mat-icon { // Mantengo 'i' per compatibilità, ma useremo mat-icon
+          font-size: 26px;
+          width: 26px;
+          height: 26px;
+          text-shadow: 0 0 6px rgba(vars.$color-vibrant-fuchsia, 0.8); // AGGIUNTO: Ombra leggera per le icone
+        }
+
+        &:hover {
+          color: lighten(vars.$color-vibrant-fuchsia, 15%); // Schiarisci all'hover
+          transform: translateY(-4px);
+          text-shadow: 0 0 12px rgba(vars.$color-vibrant-fuchsia, 0.7);
+        }
+      }
+    }
+
+    /* --- Separatore Decorativo --- */
+    .footer-separator {
+      height: 1px;
+      width: 80%;
+      max-width: 500px;
+      background: linear-gradient(to right, transparent, rgba(vars.$color-accent, 0.4), transparent);
+    }
+
+    /* --- Barra Inferiore (Copyright & Developer Credit) --- */
+    .footer-bottom-bar {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: vars.$font-size-base * 0.8;
+      color: vars.$color-white; // Mantieni il testo bianco per leggibilità
+      gap: vars.$spacing-xs;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.6); // AGGIUNTO: Ombra leggera per il testo del copyright
+      text-align: center; // Centra il testo quando si rompe su più righe
+
+      .developer-credit {
+        // Assicurati che "Realizzato da Aleksander Nikolli" rimanga insieme
+        white-space: nowrap; // Impedisce il wrapping all'interno di questo span
+
+        a {
+          color: vars.$color-vibrant-fuchsia; // Rendi il link developer fucsia
+          font-weight: bold;
+          text-shadow: 0 0 4px rgba(vars.$color-vibrant-fuchsia, 0.6); // AGGIUNTO: Ombra leggera per il link developer
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    /* --- Media Query per Responsività --- */
+    @media (max-width: vars.$breakpoint-md) {
+      .footer-bottom-bar {
+        flex-direction: column; // Forze le due parti su righe separate
+        gap: vars.$spacing-sm; // Riduci il gap quando sono in colonna
+        font-size: vars.$font-size-base * 0.9; // Aumenta leggermente la dimensione del font per leggibilità
+      }
+      .footer-socials {
+        gap: vars.$spacing-sm; // Riduci il gap anche qui per schermi più piccoli
+      }
+    }
+
+    @media (max-width: vars.$breakpoint-sm) { // Per schermi ancora più piccoli (es. iPhone X)
+      .footer-bottom-bar {
+        font-size: vars.$font-size-base * 0.85; // Riduci leggermente il font
+      }
+    }
+    

@@ -1,0 +1,126 @@
+/* You can add global styles to this file, and also import other style files */
+
+// Importa le tue variabili e mixin
+@use './styles/variables' as vars;
+@use './styles/mixins' as mixins;
+
+/* Importa il tema di Angular Material */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Stili globali per html e body */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: vars.$font-family-primary; // Usa il tuo font primario dalle variabili
+  background-color: vars.$color-background-light;
+  color: vars.$color-text-dark;
+  line-height: vars.$line-height-base;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Regola per forzare la font-family delle icone Material Design
+.material-icons {
+  font-family: 'Material Icons' !important; // Forza l'uso del font Material Icons
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; // Dimensione standard, puoi modificarla o sovrascriverla localmente
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+// Assicurati che anche mat-icon utilizzi la classe per sicurezza
+mat-icon {
+  @extend .material-icons; // Estende le proprietà della classe .material-icons
+  vertical-align: middle; // Mantenuto il tuo stile esistente
+}
+
+/* Stili per i link */
+a {
+  color: vars.$color-accent;
+  text-decoration: none;
+  transition: color vars.$transition-speed-normal vars.$transition-ease;
+
+  &:hover {
+    color: darken(vars.$color-accent, 10%);
+  }
+}
+
+/* Stili per i titoli */
+h1, h2, h3, h4, h5, h6 {
+  font-family: vars.$font-family-secondary;
+  color: vars.$color-dark-purple-text;
+  margin-top: 0;
+  margin-bottom: vars.$spacing-md;
+  line-height: 1.2;
+}
+
+h1 { font-size: 3rem; }
+h2 { font-size: 2.5rem; }
+h3 { font-size: 2rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+/* Reset di base per le liste */
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Stili per i pulsanti Material (override di base) */
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-stroked-button,
+.mat-mdc-flat-button {
+  border-radius: vars.$border-radius-md;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all vars.$transition-speed-normal vars.$transition-ease;
+}
+
+/* Wrapper per il contenuto principale (se usato nel layout generale) */
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: vars.$spacing-xl;
+}
+
+/* Utility classes */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.margin-top-lg { margin-top: vars.$spacing-lg; }
+.margin-bottom-lg { margin-bottom: vars.$spacing-lg; }
+.padding-lg { padding: vars.$spacing-lg; }
+
+/* Stili per il router-outlet (per evitare problemi di layout) */
+router-outlet + * {
+  display: block;
+}
+
+// Stili per il contenitore principale dell'applicazione (se app-root è un blocco)
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// Stili per il router-outlet per assicurare che il contenuto principale occupi lo spazio necessario
+main {
+  flex-grow: 1;
+}
+

@@ -1,0 +1,266 @@
+/* src/app/pages/chi-sono/chi-sono.component.scss */
+
+@use '../../../styles/variables' as vars;
+@use '../../../styles/mixins' as mixins;
+
+.chi-sono-container {
+  padding: vars.$spacing-lg vars.$spacing-md; /* Ridotto: da xl/lg a lg/md */
+  max-width: 1300px; /* Aumentato: da 1200px a 1300px */
+  margin: vars.$spacing-xl auto; /* Ridotto: da xxl a xl */
+  background-color: rgba(vars.$color-background-light, 0.95);
+  border-radius: vars.$border-radius-lg;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  color: vars.$color-text-dark;
+  font-family: vars.$font-family-primary;
+  text-align: center;
+}
+
+.page-title {
+  font-family: vars.$font-family-secondary;
+  font-size: 3rem;
+  color: vars.$color-vibrant-fuchsia;
+  margin-bottom: vars.$spacing-md;
+  text-shadow: 0 0 10px rgba(vars.$color-vibrant-fuchsia, 0.4);
+}
+
+.page-subtitle {
+  font-size: 1.2rem;
+  color: vars.$color-text-light;
+  margin-bottom: vars.$spacing-xxl;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: vars.$line-height-base;
+}
+
+/* --- Sezione About Me (Introduzione e Filosofia) --- */
+.about-me-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: vars.$spacing-lg; /* Ridotto: da xl a lg */
+  background-color: vars.$color-white;
+  border: 1px solid rgba(vars.$color-primary, 0.2);
+  border-radius: vars.$border-radius-xl;
+  padding: vars.$spacing-xl; /* Ridotto: da xxl a xl */
+  margin-bottom: vars.$spacing-xxl;
+  box-shadow: 0 8px 25px rgba(vars.$color-primary, 0.2);
+  text-align: left;
+
+  .about-me-image-container {
+    flex-shrink: 0;
+    width: 40%;
+    max-width: 400px;
+    border-radius: vars.$border-radius-xl;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .about-me-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .about-me-content {
+    flex: 1;
+    padding-left: vars.$spacing-lg;
+  }
+
+  .section-heading {
+    font-family: vars.$font-family-secondary;
+    font-size: 2.5rem;
+    color: vars.$color-vibrant-fuchsia;
+    margin-bottom: vars.$spacing-md;
+    text-shadow: 0 0 8px rgba(vars.$color-vibrant-fuchsia, 0.3);
+  }
+
+  p {
+    font-size: 1.1rem;
+    line-height: vars.$line-height-base;
+    color: vars.$color-text-dark;
+    margin-bottom: vars.$spacing-md;
+  }
+}
+
+/* --- Sezione Formazione e Qualifiche --- */
+.qualifications-section {
+  background-color: vars.$color-white;
+  border: 1px solid rgba(vars.$color-secondary, 0.2);
+  border-radius: vars.$border-radius-lg;
+  padding: vars.$spacing-lg; /* Ridotto: da xl a lg */
+  margin-bottom: vars.$spacing-xxl;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+
+  .section-heading {
+    font-family: vars.$font-family-secondary;
+    font-size: 2.2rem;
+    color: vars.$color-dark-purple-text;
+    margin-bottom: vars.$spacing-xl;
+  }
+
+  .qualification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: vars.$spacing-md;
+    margin-bottom: vars.$spacing-lg;
+    text-align: left;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .qualification-icon {
+      font-size: 36px;
+      color: vars.$color-secondary;
+      flex-shrink: 0;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: vars.$line-height-base;
+      color: vars.$color-text-dark;
+      margin: 0;
+      strong {
+        color: vars.$color-vibrant-fuchsia;
+      }
+    }
+  }
+}
+
+/* --- Call to Action Finale (riutilizzato da Trucco Sposa) --- */
+.cta-section {
+  background: linear-gradient(45deg, vars.$color-primary 0%, darken(vars.$color-primary, 10%) 100%);
+  color: vars.$color-text-dark;
+  text-align: center;
+  padding: vars.$spacing-xl vars.$spacing-md; /* Ridotto: da xxl/lg a xl/md */
+  margin-top: vars.$spacing-xl; /* Ridotto: da xxl a xl */
+  border-radius: vars.$border-radius-xl;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0px 8px 25px rgba(vars.$color-primary, 0.4);
+
+  h2 {
+    font-family: vars.$font-family-secondary;
+    font-size: 2.5rem;
+    margin-bottom: vars.$spacing-md;
+    color: vars.$color-dark-pink-text;
+  }
+  p {
+    font-size: 1.3rem;
+    margin-bottom: vars.$spacing-xl;
+    color: vars.$color-text-dark;
+  }
+  button {
+    font-size: 1.3rem;
+    padding: 1rem 3rem;
+    border-radius: vars.$border-radius-xl;
+    background-color: vars.$color-vibrant-fuchsia;
+    color: vars.$color-white;
+    border: 2px solid vars.$color-vibrant-fuchsia;
+    transition: all vars.$transition-speed-normal vars.$transition-ease;
+
+    &:hover {
+      background-color: lighten(vars.$color-vibrant-fuchsia, 10%);
+      color: vars.$color-white;
+      box-shadow: 0 0 20px rgba(vars.$color-vibrant-fuchsia, 0.5);
+    }
+  }
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: vars.$breakpoint-lg) {
+  .page-title {
+    font-size: 2.5rem;
+  }
+  .about-me-section {
+    flex-direction: column;
+    .about-me-content {
+      padding-left: 0;
+      text-align: center;
+    }
+    .about-me-image-container {
+      width: 80%;
+      max-width: 500px;
+      margin-bottom: vars.$spacing-lg;
+    }
+  }
+  .section-heading {
+    font-size: 2rem;
+  }
+  .qualification-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: vars.$spacing-xs;
+  }
+  .cta-section h2 {
+    font-size: 2rem;
+  }
+  .cta-section p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: vars.$breakpoint-md) {
+  .chi-sono-container {
+    padding: vars.$spacing-lg vars.$spacing-md;
+    margin-top: vars.$spacing-xl;
+  }
+  .page-title {
+    font-size: 2rem;
+  }
+  .page-subtitle {
+    font-size: 1rem;
+    margin-bottom: vars.$spacing-xl;
+  }
+  .about-me-section, .qualifications-section {
+    padding: vars.$spacing-lg;
+    gap: vars.$spacing-lg;
+  }
+  .section-heading {
+    font-size: 1.8rem;
+  }
+  .about-me-content p, .qualification-item p {
+    font-size: 0.95rem;
+  }
+  .about-me-image-container {
+    width: 95%;
+  }
+  .cta-section {
+    padding: vars.$spacing-xl vars.$spacing-md;
+    h2 {
+      font-size: 1.8rem;
+    }
+    p {
+      font-size: 1rem;
+    }
+    button {
+      font-size: 1rem;
+      padding: 0.8rem 2rem;
+    }
+  }
+}
+
+@media (max-width: vars.$breakpoint-sm) {
+  .page-title {
+    font-size: 1.8rem;
+  }
+  .section-heading {
+    font-size: 1.5rem;
+  }
+  .about-me-content p, .qualification-item p {
+    font-size: 0.9rem;
+  }
+  .qualification-item .qualification-icon {
+    font-size: 30px;
+  }
+  .cta-section h2 {
+    font-size: 1.5rem;
+  }
+  .cta-section p {
+    font-size: 0.9rem;
+  }
+}
+

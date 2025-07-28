@@ -1,0 +1,72 @@
+<!-- src/app/pages/trucco-sposa/trucco-sposa.component.html -->
+
+<section class="trucco-sposa-container">
+  <h1 class="page-title">
+    <mat-icon class="title-icon">favorite</mat-icon> <span i18n="@@truccoSposaTitle">Trucco Sposa</span>
+  </h1>
+  <p class="page-subtitle" i18n="@@truccoSposaSubtitle">
+    Il tuo giorno speciale merita un look impeccabile. Scopri i miei servizi dedicati alle spose.
+  </p>
+
+  <!-- Sezione Pacchetto "Seguimi" (In Evidenza) -->
+  <div class="package-highlight-card mat-elevation-z8">
+    <div class="highlight-content">
+      <h2 class="highlight-title" i18n="@@truccoSposaPackageFollowMeTitle">Pacchetto Seguimi</h2>
+      <p class="highlight-description" i18n="@@truccoSposaPackageFollowMeDescription">
+        Un servizio esclusivo per la sposa che desidera avere una make-up artist dedicata per tutta la durata dell'evento, dal mattino fino al taglio della torta.
+      </p>
+      <ul class="highlight-features">
+        <li><mat-icon>check_circle</mat-icon> <span i18n="@@truccoSposaPackageFollowMeFeature1">Consulenza personalizzata e studio del look completo</span></li>
+        <li><mat-icon>check_circle</mat-icon> <span i18n="@@truccoSposaPackageFollowMeFeature2">Prove trucco illimitate</span></li>
+        <li><mat-icon>check_circle</mat-icon> <span i18n="@@truccoSposaPackageFollowMeFeature3">Trucco sposa il giorno delle nozze</span></li>
+        <li><mat-icon>check_circle</mat-icon> <span i18n="@@truccoSposaPackageFollowMeFeature4">Servizio di ritocco per tutta la durata dell'evento</span></li>
+        <li><mat-icon>check_circle</mat-icon> <span i18n="@@truccoSposaPackageFollowMeFeature5">Trucco per due persone aggiuntive (es. mamma, testimone, damigella)</span></li>
+        <li><mat-icon>check_circle</mat-icon> <span i18n="@@truccoSposaPackageFollowMeFeature6">Kit ritocco personalizzato per la sposa</span></li>
+      </ul>
+      <button mat-raised-button color="accent" routerLink="/contatti"
+              i18n-attr.aria-label="@@truccoSposaPackageFollowMeButtonAria" aria-label="Richiedi informazioni sul Pacchetto Seguimi">
+        <span i18n="@@truccoSposaPackageFollowMeButton">Richiedi Info</span>
+        <mat-icon>favorite</mat-icon>
+      </button>
+    </div>
+    <div class="highlight-image-container">
+      <img src="../../../assets/trucco-sposa-seguimi.png" alt="Trucco Sposa Pacchetto Seguimi" class="highlight-image">
+    </div>
+  </div>
+
+  <!-- Sezione Pacchetto "Trucco Sposa Normale" -->
+  <div class="package-card mat-elevation-z4">
+    <div class="package-content">
+      <h2 class="package-title" i18n="@@truccoSposaPackageStandardTitle">Pacchetto Trucco Sposa Standard</h2>
+      <p class="package-description" i18n="@@truccoSposaPackageStandardDescription">
+        Il pacchetto ideale per la sposa che desidera un trucco impeccabile e duraturo per il giorno delle nozze, con una prova inclusa.
+      </p>
+      <ul class="package-features">
+        <li><mat-icon>check_circle_outline</mat-icon> <span i18n="@@truccoSposaPackageStandardFeature1">Consulenza personalizzata</span></li>
+        <li><mat-icon>check_circle_outline</mat-icon> <span i18n="@@truccoSposaPackageStandardFeature2">Una prova trucco</span></li>
+        <li><mat-icon>check_circle_outline</mat-icon> <span i18n="@@truccoSposaPackageStandardFeature3">Trucco sposa il giorno delle nozze</span></li>
+        <li><mat-icon>check_circle_outline</mat-icon> <span i18n="@@truccoSposaPackageStandardFeature4">Applicazione ciglia finte (su richiesta)</span></li>
+      </ul>
+      <button mat-stroked-button color="primary" routerLink="/contatti"
+              i18n-attr.aria-label="@@truccoSposaPackageStandardButtonAria" aria-label="Richiedi informazioni sul Pacchetto Standard">
+        <span i18n="@@truccoSposaPackageStandardButton">Contattami</span>
+        <mat-icon>email</mat-icon>
+      </button>
+    </div>
+    <div class="package-image-container">
+      <img src="../../../assets/trucco-sposa-standard.png" alt="Trucco Sposa Pacchetto Standard" class="package-image">
+    </div>
+  </div>
+
+  <!-- Call to Action Finale -->
+  <div class="cta-section mat-elevation-z4">
+    <h2 i18n="@@truccoSposaCtaHeading">Pronta a Brillare nel Tuo Giorno Speciale?</h2>
+    <p i18n="@@truccoSposaCtaDescription">Contattami per una consulenza personalizzata e iniziamo a creare il look perfetto per il tuo matrimonio.</p>
+    <button mat-raised-button color="accent" routerLink="/contatti"
+            i18n-attr.aria-label="@@truccoSposaCtaButtonAria" aria-label="Prenota la tua consulenza per il trucco sposa">
+      <span i18n="@@truccoSposaCtaButton">Richiedi un Preventivo</span>
+      <mat-icon>event</mat-icon>
+    </button>
+  </div>
+</section>
+

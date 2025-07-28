@@ -1,0 +1,76 @@
+// src/styles/_variables.scss
+
+
+
+// Colori Primari (Palette Femminile e Beauty)
+$color-primary: #f8c8dc; // Rosa chiaro (Light Pink)
+$color-secondary: #e6e6fa; // Lavanda (Lavender)
+$color-accent: #ff007f; // Fucsia (Fuchsia)
+$color-warn: #F44336;
+$color-success: #4CAF50;
+$color-info: #2196F3;
+$color-error: #F44336;
+$color-black: #000000;
+$color-vibrant-fuchsia: #E91E63; // Un fucsia più acceso
+$color-light-pink-bg: #FCE4EC; // Un rosa chiaro per sfondi
+$color-dark-purple-text: #4A2A4A; // Un viola scuro per il testo
+$color-dark-pink-text: #C2185B; // Un rosa scuro per il testo
+$color-dark-violet-text: #770057; // Viola scuro delicato per guarantees-block
+
+$color-text-dark: #333333;
+$color-text-light: #666666;
+$color-background-light: #f8f8f8;
+$color-white: #ffffff;
+$color-border: #e0e0e0;
+$color-shadow-light: rgba(0, 0, 0, 0.05);
+$color-shadow-medium: rgba(0, 0, 0, 0.1);
+
+// VARIABILE AGGIUNTA PER RISOLVERE L'ERRORE
+$color-gray-light: #E0E0E0; // Grigio chiaro per bordi, sfondi secondari (come nel tuo SCSS)
+
+
+// NUOVE VARIABILI DAL PROGETTO FUNZIONANTE (ma mappate alle tue)
+$dark-bg: $color-text-dark; // Mappa al tuo colore scuro per sfondi
+$light-gray: $color-text-light; // Mappa al tuo colore testo chiaro
+$shadow-glow-color: rgba($color-vibrant-fuchsia, 0.7); // Mappa al tuo fucsia
+
+
+// NUOVE VARIABILI PER IL FORM DI CONTATTO
+$error-color: #f44336; // Rosso per errori
+$success-color: #4CAF50; // Verde per successi
+
+// Tipografia
+$font-family-primary: 'Inter', sans-serif; // Font principale per il corpo del testo
+$font-family-secondary: 'Playfair Display', serif; // Un font serif elegante per i titoli, per un tocco beauty
+$font-size-base: 16px;
+$line-height-base: 1.6;
+$line-height-lg: 1.8;
+$line-height-sm: 1.4;
+
+// Spaziature
+$spacing-xxs: 0.25rem; // 4px
+$spacing-xs: 0.5rem;  // 8px
+$spacing-sm: 0.75rem; // 12px
+$spacing-md: 1rem;    // 16px
+$spacing-lg: 1.5rem;  // 24px
+$spacing-xl: 2rem;    // 32px
+$spacing-xxl: 3rem;   // 48px
+
+
+// Bordi
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 20px;
+
+// Transizioni
+$transition-speed-fast: 0.2s;
+$transition-speed-normal: 0.3s;
+$transition-speed-slow: 0.5s;
+$transition-ease: ease-in-out;
+
+// Breakpoints (se usati nei mixin o direttamente)
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;

@@ -1,0 +1,39 @@
+<!-- src/app/pages/portfolio/portfolio.component.html -->
+<section class="portfolio-container">
+  <h1 class="page-title" i18n="@@portfolioTitle">Il Mio Portfolio</h1>
+  <p class="page-subtitle" i18n="@@portfolioSubtitle">Scopri i miei lavori più recenti e le trasformazioni che ho realizzato.</p>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner [diameter]="50"></mat-spinner>
+    <p i18n="@@portfolioLoading">Caricamento portfolio...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <mat-icon>error_outline</mat-icon> <span i18n="@@portfolioErrorMessage">{{ errorMessage }}</span>
+  </div>
+
+  <div *ngIf="!isLoading && portfolioItems.length > 0" class="portfolio-grid" @fadeInStagger>
+    <mat-card *ngFor="let item of portfolioItems" class="portfolio-card mat-elevation-z4" @fadeInItem>
+      <img mat-card-image [src]="item.coverImageUrl || 'assets/placeholder.jpg'"
+           [alt]="item.title || 'Immagine Portfolio'"
+           onerror="this.src='assets/placeholder.jpg'">
+      <mat-card-content>
+        <h2 class="card-title">{{ item.title }}</h2>
+        <p class="card-subtitle" *ngIf="item.subtitle">{{ item.subtitle }}</p>
+        <mat-chip-listbox aria-label="Categoria del lavoro">
+          <mat-chip-row i18n="@@portfolioCategoryChip">Categoria: {{ item.category }}</mat-chip-row>
+        </mat-chip-listbox>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [routerLink]="['/portfolio', item.id]" i18n="@@portfolioViewDetailsButton">
+          Vedi Dettagli
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!isLoading && portfolioItems.length === 0 && !errorMessage" class="no-items-message">
+    <mat-icon>info</mat-icon> <span i18n="@@portfolioNoItemsMessage">Nessun lavoro nel portfolio da visualizzare.</span>
+  </div>
+</section>

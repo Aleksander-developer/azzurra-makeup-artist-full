@@ -1,0 +1,82 @@
+<!-- src/app/pages/portfolio/portfolio-detail/portfolio-detail.component.html -->
+<section class="portfolio-detail-container">
+  <div class="back-button-container">
+    <button mat-icon-button (click)="goBack()" i18n-aria-label="@@portfolioDetailGoBackAria" aria-label="Torna indietro">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span i18n="@@portfolioDetailBackToPortfolio">Torna al Portfolio</span>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner [diameter]="50"></mat-spinner>
+    <p i18n="@@portfolioDetailLoading">Caricamento dettagli portfolio...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <mat-icon>error_outline</mat-icon> <span i18n="@@portfolioDetailErrorMessage">{{ errorMessage }}</span>
+  </div>
+
+  <div *ngIf="portfolioItem && !isLoading">
+    <h1 class="portfolio-title">{{ portfolioItem.title }}</h1>
+    <h2 class="portfolio-subtitle" *ngIf="portfolioItem.subtitle">{{ portfolioItem.subtitle }}</h2>
+    <p class="portfolio-description" *ngIf="portfolioItem.description">{{ portfolioItem.description }}</p>
+
+    <div class="portfolio-meta">
+      <mat-chip-listbox aria-label="Categoria del lavoro">
+        <mat-chip-row i18n="@@portfolioDetailCategoryChip">Categoria: {{ portfolioItem.category }}</mat-chip-row>
+      </mat-chip-listbox>
+    </div>
+
+    <!-- Sezione immagini / carousel -->
+    <div class="image-carousel-container">
+      <div class="main-image-wrapper">
+        <img [src]="portfolioItem.images[currentImageIndex].src || 'assets/placeholder.jpg'"
+             [alt]="portfolioItem.images[currentImageIndex].alt || portfolioItem.title"
+             class="main-image"
+             onerror="this.src='assets/placeholder.jpg'"
+             (click)="openFullscreen(currentImageIndex)">
+        <button mat-icon-button class="fullscreen-icon" (click)="openFullscreen(currentImageIndex)" i18n-aria-label="@@portfolioDetailOpenFullscreenAria" aria-label="Apri immagine a schermo intero">
+          <mat-icon>fullscreen</mat-icon>
+        </button>
+      </div>
+
+      <div class="carousel-controls" *ngIf="portfolioItem.images.length > 1">
+        <button mat-icon-button (click)="prevImage()" i18n-aria-label="@@portfolioDetailPrevImageAria" aria-label="Immagine precedente">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span i18n="@@portfolioDetailImageCounter">{{ currentImageIndex + 1 }} di {{ portfolioItem.images.length }}</span>
+        <button mat-icon-button (click)="nextImage()" i18n-aria-label="@@portfolioDetailNextImageAria" aria-label="Immagine successiva">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+
+      <div class="thumbnail-gallery">
+        <img *ngFor="let image of portfolioItem.images; let i = index"
+             [src]="image.src || 'assets/placeholder.jpg'"
+             [alt]="image.alt || portfolioItem.title"
+             [class.active]="i === currentImageIndex"
+             (click)="currentImageIndex = i"
+             class="thumbnail"
+             onerror="this.src='assets/placeholder.jpg'">
+      </div>
+    </div>
+  </div>
+
+  <!-- Galleria Fullscreen -->
+  <div *ngIf="showFullscreen && portfolioItem && portfolioItem.images.length > 0" class="fullscreen-overlay" (click)="closeFullscreen()">
+    <button mat-icon-button class="fullscreen-close-button" (click)="closeFullscreen(); $event.stopPropagation();" i18n-aria-label="@@portfolioDetailCloseFullscreenAria" aria-label="Chiudi galleria a schermo intero">
+      <mat-icon>close</mat-icon>
+    </button>
+    <button mat-icon-button class="fullscreen-nav-button prev" (click)="prevFullscreenImage($event)" i18n-aria-label="@@portfolioDetailPrevFullscreenAria" aria-label="Immagine precedente a schermo intero">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <img [src]="portfolioItem.images[fullscreenImageIndex].src || 'assets/placeholder.jpg'"
+         [alt]="portfolioItem.images[fullscreenImageIndex].alt || portfolioItem.title"
+         class="fullscreen-image"
+         onerror="this.src='assets/placeholder.jpg'"
+         (click)="$event.stopPropagation()">
+    <button mat-icon-button class="fullscreen-nav-button next" (click)="nextFullscreenImage($event)" i18n-aria-label="@@portfolioDetailNextFullscreenAria" aria-label="Immagine successiva a schermo intero">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</section>
