@@ -1,7 +1,7 @@
 // src/routes/portfolio.routes.ts
 import express from 'express';
 import multer from 'multer';
-import path from 'path';
+// import path from 'path'; // Rimosso: non più necessario con memoryStorage
 import {
   getPortfolioItems,
   getPortfolioItemById,
@@ -12,15 +12,10 @@ import {
 
 const router = express.Router();
 
-// Configurazione Multer per l'upload su disco temporaneo
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // La cartella 'uploads' deve esistere nella root del backend
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  }
-});
+// Configurazione Multer per l'upload in memoria (memoryStorage)
+// Questo è cruciale per ambienti serverless come Google Cloud Run,
+// poiché i file non vengono scritti su disco e non si perdono al riavvio del container.
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Rotte per il Portfolio

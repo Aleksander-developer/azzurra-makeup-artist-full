@@ -6,7 +6,8 @@
     <a mat-button routerLink="/home" i18n-aria-label="@@navHomeAria" i18n="@@navHome">Home</a>
     <a mat-button routerLink="/trucco-sposa" i18n-aria-label="@@navBrideMakeupAria" i18n="@@navBrideMakeup">Trucco Sposa</a>
     <a mat-button routerLink="/portfolio" i18n-aria-label="@@navPortfolioAria" i18n="@@navPortfolio">Portfolio</a>
-    <!-- RIMOSSO: <a mat-button *ngIf="isLoggedIn" routerLink="/admin/portfolio-manager" aria-label="Admin Portfolio">Admin Portfolio</a> -->
+    <!-- Mostra il link "Admin Portfolio" solo se loggato -->
+    <a mat-button *ngIf="isLoggedIn" routerLink="/admin" i18n-aria-label="@@navAdminPortfolioAria" i18n="@@navAdminPortfolio">Admin Portfolio</a>
   </div>
 
   <!-- Logo centrale -->
@@ -20,8 +21,13 @@
     <a mat-button routerLink="/contatti" i18n-aria-label="@@navContactsAria" i18n="@@navContacts">Contatti</a>
     <a mat-button routerLink="/chi-sono" i18n-aria-label="@@navAboutMeAria" i18n="@@navAboutMe">Chi Sono</a>
 
-    <a mat-stroked-button color="accent" routerLink="/login" i18n-aria-label="@@navLoginAria" i18n="@@navLogin">Login</a>
-
+    <!-- Mostra "Login" se non loggato, "Logout" se loggato -->
+    <ng-container *ngIf="!isLoggedIn">
+      <a mat-stroked-button color="accent" routerLink="/login" i18n-aria-label="@@navLoginAria" i18n="@@navLogin">Login</a>
+    </ng-container>
+    <ng-container *ngIf="isLoggedIn">
+      <button mat-stroked-button color="accent" (click)="logout()" i18n-aria-label="@@navLogoutAria" i18n="@@navLogout">Logout</button>
+    </ng-container>
 
     <!-- Selettore Lingua per Desktop (con testo fisso) -->
     <div class="language-selector desktop-lang-selector">
@@ -46,10 +52,19 @@
   <button mat-menu-item routerLink="/home" i18n-aria-label="@@navHomeAriaMobile" i18n="@@navHomeMobile">Home</button>
   <button mat-menu-item routerLink="/trucco-sposa" i18n-aria-label="@@navBrideMakeupAriaMobile" i18n="@@navBrideMakeupMobile">Trucco Sposa</button>
   <button mat-menu-item routerLink="/portfolio" i18n-aria-label="@@navPortfolioAriaMobile" i18n="@@navPortfolioMobile">Portfolio</button>
+  <!-- Mostra il link "Admin Portfolio" nel menu mobile solo se loggato -->
+  <button mat-menu-item *ngIf="isLoggedIn" routerLink="/admin" i18n-aria-label="@@navAdminPortfolioAriaMobile" i18n="@@navAdminPortfolioMobile">Admin Portfolio</button>
   <button mat-menu-item routerLink="/servizi" i18n-aria-label="@@navServicesAriaMobile" i18n="@@navServicesMobile">Servizi</button>
   <button mat-menu-item routerLink="/contatti" i18n-aria-label="@@navContactsAriaMobile" i18n="@@navContactsMobile">Contatti</button>
   <button mat-menu-item routerLink="/chi-sono" i18n-aria-label="@@navAboutMeAriaMobile" i18n="@@navAboutMeMobile">Chi Sono</button>
-  <button mat-menu-item routerLink="/login" i18n-aria-label="@@navLoginAriaMobile" i18n="@@navLoginMobile">Login</button>
+  
+  <!-- Mostra "Login" se non loggato, "Logout" se loggato nel menu mobile -->
+  <ng-container *ngIf="!isLoggedIn">
+    <button mat-menu-item routerLink="/login" i18n-aria-label="@@navLoginAriaMobile" i18n="@@navLoginMobile">Login</button>
+  </ng-container>
+  <ng-container *ngIf="isLoggedIn">
+    <button mat-menu-item (click)="logout()" i18n-aria-label="@@navLogoutAriaMobile" i18n="@@navLogoutMobile">Logout</button>
+  </ng-container>
 
   <!-- Selettore Lingua per Mobile (nel menu, con testo fisso) -->
   <div class="language-selector mobile-lang-selector">

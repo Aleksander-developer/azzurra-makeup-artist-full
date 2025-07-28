@@ -1,0 +1,7 @@
+node_modules
+dist
+npm-debug.log
+.git
+.gitignore
+.vscode
+uploads/ # Se questa cartella contiene file caricati dagli utenti, NON deve essere inclusa nell'immagine.

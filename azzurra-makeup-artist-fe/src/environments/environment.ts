@@ -1,5 +1,5 @@
 // src/environments/environment.ts
 export const environment = {
   production: false,
-  apiUrl: 'https://azzurra-makeup-artist-backend.onrender.com'
+  apiUrl: 'http://localhost:3000' // <-- MODIFICATO: Punta al tuo backend locale
 };

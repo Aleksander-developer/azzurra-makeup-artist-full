@@ -1,6 +1,6 @@
 // src/app/admin/portfolio-manager/portfolio-manager.component.ts
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common'; // Importa isPlatformBrowser
+import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { PortfolioService } from '../../services/portfolio.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -15,17 +15,18 @@ declare const $localize: any;
 @Component({
   selector: 'app-admin-portfolio-manager',
   templateUrl: './portfolio-manager.component.html',
-  styleUrls: ['./portfolio-manager.component.scss']
+  styleUrls: ['./portfolio-manager.component.scss'] // CORRETTO: era portfolio.component.scss
 })
 export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
   portfolioForm!: FormGroup;
   portfolioItems: PortfolioItem[] = [];
   editingItem: PortfolioItem | null = null;
 
+  // allImagePreviews è definito per accettare string | ArrayBuffer | null
   allImagePreviews: (string | ArrayBuffer | null)[] = [];
 
-  loading = false;
-  isUploading = false;
+  loading = false; // Usa questa proprietà per lo stato di caricamento generale
+  isUploading = false; // Usa questa per lo stato specifico di upload
 
   errorMessage: string | null = null;
   successMessage: string | null = null;
@@ -41,7 +42,7 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object // Inietta PLATFORM_ID
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   ngOnInit(): void {
@@ -68,9 +69,12 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
     return this.portfolioForm.get('images') as FormArray;
   }
 
+  // Modificato: Aggiunto un ID univoco per il trackBy
   createImageGroup(image?: PortfolioImage, file?: File): FormGroup {
-    console.log('Creazione FormGroup per immagine:', image, 'File:', file);
+    const uniqueId = image?.src || Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    console.log('Creazione FormGroup per immagine:', image, 'File:', file, 'ID:', uniqueId);
     return this.fb.group({
+      id: [uniqueId], // Aggiungi un ID univoco
       src: [image ? image.src : undefined],
       description: [image ? image.description : ''],
       alt: [image ? image.alt : ''],
@@ -98,59 +102,48 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
     if (input.files && input.files.length > 0) {
       const newSelectedFiles = Array.from(input.files);
 
-      const currentFormImages: { imageGroup: FormGroup, preview: string | ArrayBuffer | null }[] = [];
-      this.imagesFormArray.controls.forEach((control, index) => {
-        currentFormImages.push({
-          imageGroup: control as FormGroup,
-          preview: this.allImagePreviews[index]
-        });
-      });
-
-      const maxNewFilesToAdd = 10 - currentFormImages.length;
+      const currentImageCount = this.imagesFormArray.length;
+      const maxNewFilesToAdd = 10 - currentImageCount;
       const filesToActuallyAdd = newSelectedFiles.slice(0, maxNewFilesToAdd);
 
-      if (filesToActuallyAdd.length === 0 && currentFormImages.length >= 10) {
-        if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+      if (filesToActuallyAdd.length === 0 && currentImageCount >= 10) {
+        if (isPlatformBrowser(this.platformId)) {
           this.snackBar.open($localize`:@@adminPortfolioManagerMaxImagesWarning:Massimo 10 immagini consentite per portfolio.`, $localize`:@@commonCloseButton:Chiudi`, { duration: 3000 });
         }
         return;
       }
 
-      this.imagesFormArray.clear();
-      this.allImagePreviews = [];
-
-      currentFormImages.forEach(item => {
-        this.imagesFormArray.push(item.imageGroup);
-        this.allImagePreviews.push(item.preview);
-      });
-
+      // Aggiungi i nuovi file direttamente al FormArray e genera le anteprime
       filesToActuallyAdd.forEach((file) => {
-        this.imagesFormArray.push(this.createImageGroup(undefined, file));
-        this.allImagePreviews.push(null);
+        const newImageGroup = this.createImageGroup(undefined, file);
+        this.imagesFormArray.push(newImageGroup); // Aggiunge il nuovo FormGroup
+
+        // Genera l'anteprima per il nuovo file
+        const reader = new FileReader();
+        reader.onload = () => {
+          // Trova il FormGroup appena aggiunto per questa immagine e associa l'anteprima
+          // Usiamo l'ID univoco per trovare il FormGroup corretto
+          const imageId = newImageGroup.get('id')?.value;
+          const indexToUpdate = this.imagesFormArray.controls.findIndex(c => c.get('id')?.value === imageId);
+
+          if (indexToUpdate !== -1) {
+            this.allImagePreviews[indexToUpdate] = reader.result;
+            this.cdr.detectChanges(); // Forza la change detection
+            console.log(`Anteprima caricata per un nuovo file con ID: ${imageId}`);
+          } else {
+            console.warn(`Impossibile trovare FormGroup per l'ID ${imageId} per aggiornare l'anteprima.`);
+          }
+        };
+        reader.readAsDataURL(file);
       });
 
-      this.cdr.detectChanges();
-      console.log(`Tutti i FormGroups (esistenti + nuovi) aggiunti. Change detection forzata.`);
+      this.cdr.detectChanges(); // Forza la change detection dopo aver aggiunto i FormGroups
+      console.log(`Nuovi FormGroups aggiunti. Change detection forzata.`);
       console.log('imagesFormArray length dopo selezione file:', this.imagesFormArray.length);
 
-      this.imagesFormArray.controls.forEach((control, index) => {
-        const formGroupValue = control.value;
-        if (formGroupValue.isNew && formGroupValue.file instanceof File && this.allImagePreviews[index] === null) {
-          const file = formGroupValue.file;
-          const reader = new FileReader();
-          reader.onload = () => {
-            this.allImagePreviews[index] = reader.result;
-            this.cdr.detectChanges();
-            console.log(`Anteprima caricata per indice ${index}`);
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-
-      console.log('File selezionati per la galleria (totali):', newSelectedFiles.map(f => f.name));
-    }
-    if (input && isPlatformBrowser(this.platformId)) { // Protezione SSR
-      input.value = '';
+      if (input && isPlatformBrowser(this.platformId)) {
+        input.value = ''; // Resetta il valore dell'input file per permettere la selezione dello stesso file più volte
+      }
     }
   }
 
@@ -160,6 +153,7 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
     if (index >= 0 && index < this.imagesFormArray.length) {
       this.imagesFormArray.removeAt(index);
 
+      // Rimuovi l'anteprima corrispondente
       if (index < this.allImagePreviews.length) {
         this.allImagePreviews.splice(index, 1);
       }
@@ -185,7 +179,7 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
         this.loading = false;
       },
       error: (err) => {
-        if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+        if (isPlatformBrowser(this.platformId)) {
           this.snackBar.open($localize`:@@adminPortfolioManagerLoadError:Errore nel caricamento degli elementi del portfolio.`, $localize`:@@commonCloseButton:Chiudi`, { duration: 3000 });
         }
         console.error('Errore nel caricamento portfolio:', err);
@@ -242,10 +236,10 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
     this.editingItem = null;
     this.imagesFormArray.clear();
     this.allImagePreviews = [];
-    if (this.galleryFileInput && isPlatformBrowser(this.platformId)) { // Protezione SSR
+    if (this.galleryFileInput && isPlatformBrowser(this.platformId)) {
       this.galleryFileInput.nativeElement.value = '';
     }
-    if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+    if (isPlatformBrowser(this.platformId)) {
       this.snackBar.open($localize`:@@adminPortfolioManagerFormReset:Form resettato.`, $localize`:@@commonCloseButton:Chiudi`, { duration: 2000 });
     }
     this.errorMessage = null;
@@ -258,10 +252,11 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
     this.portfolioForm.markAllAsTouched();
 
     if (this.portfolioForm.invalid) {
-      if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+      if (isPlatformBrowser(this.platformId)) {
         this.snackBar.open($localize`:@@adminPortfolioManagerFormInvalid:Per favor, compila tutti i campi obbligatori.`, $localize`:@@commonCloseButton:Chiudi`, { duration: 3000 });
       }
       console.warn('Form non valido al submit.');
+      this.loading = false; // CORRETTO: Imposta loading a false anche qui
       return;
     }
 
@@ -293,9 +288,10 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
 
     if (imagesMetadataToSend.length === 0 && !this.editingItem) {
       this.errorMessage = $localize`:@@adminPortfolioManagerNoImagesError:Devi aggiungere almeno un'immagine al portfolio.`;
-      if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+      if (isPlatformBrowser(this.platformId)) {
         this.snackBar.open(this.errorMessage ?? '', $localize`:@@commonCloseButton:Chiudi`, { duration: 3000 });
       }
+      this.loading = false; // CORRETTO: Imposta loading a false anche qui
       return;
     }
 
@@ -321,7 +317,7 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
           imagesMetadataToSend
         ).toPromise();
         this.successMessage = $localize`:@@adminPortfolioManagerUpdateSuccess:Elemento portfolio aggiornato con successo!`;
-        if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+        if (isPlatformBrowser(this.platformId)) {
           this.snackBar.open(this.successMessage ?? '', $localize`:@@commonCloseButton:Chiudi`, { duration: 3000 });
         }
         console.log('Elemento portfolio aggiornato con successo!');
@@ -329,7 +325,7 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
         console.log('Aggiunta nuovo elemento portfolio.');
         if (newFilesToUpload.length === 0) {
           this.errorMessage = $localize`:@@adminPortfolioManagerNoNewImagesError:Devi selezionare almeno un'immagine per un nuovo elemento.`;
-          if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+          if (isPlatformBrowser(this.platformId)) {
             this.snackBar.open(this.errorMessage ?? '', $localize`:@@commonCloseButton:Chiudi`, { duration: 3000 });
           }
           this.loading = false;
@@ -343,7 +339,7 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
           imagesMetadataToSend
         ).toPromise();
         this.successMessage = $localize`:@@adminPortfolioManagerAddSuccess:Elemento portfolio aggiunto con successo!`;
-        if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+        if (isPlatformBrowser(this.platformId)) {
           this.snackBar.open(this.successMessage ?? '', $localize`:@@commonCloseButton:Chiudi`, { duration: 3000 });
         }
         console.log('Elemento portfolio aggiunto con successo!');
@@ -352,7 +348,7 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
       this.loadPortfolioItems();
     } catch (error: any) {
       this.errorMessage = $localize`:@@adminPortfolioManagerOperationError:Errore durante l'operazione sul portfolio: ${error.message || 'Errore sconosciuto.'}`;
-      if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+      if (isPlatformBrowser(this.platformId)) {
         this.snackBar.open(this.errorMessage ?? '', $localize`:@@commonCloseButton:Chiudi`, { duration: 5000 });
       }
       console.error('Errore portfolio:', error);
@@ -366,14 +362,14 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
   deleteItem(id: string): void {
     console.log('Tentativo di eliminare elemento con ID:', id);
     if (!id) {
-      if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+      if (isPlatformBrowser(this.platformId)) {
         this.snackBar.open($localize`:@@adminPortfolioManagerInvalidIdError:Impossibile eliminare: ID elemento non valido.`, $localize`:@@commonCloseButton:Chiudi`, { duration: 3000 });
       }
       console.error('ID elemento non valido per l\'eliminazione:', id);
       return;
     }
 
-    if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+    if (isPlatformBrowser(this.platformId)) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         width: '300px',
         data: { message: $localize`:@@adminPortfolioManagerDeleteConfirm:Sei sicuro di voler eliminare questo elemento del portfolio?` }
@@ -385,7 +381,7 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
           this.portfolioService.deletePortfolioItem(id).subscribe({
             next: () => {
               this.successMessage = $localize`:@@adminPortfolioManagerDeleteSuccess:Elemento portfolio eliminato con successo!`;
-              if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+              if (isPlatformBrowser(this.platformId)) {
                 this.snackBar.open(this.successMessage ?? '', $localize`:@@commonCloseButton:Chiudi`, { duration: 3000 });
               }
               this.loadPortfolioItems();
@@ -393,7 +389,7 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
             },
             error: (err) => {
               this.errorMessage = $localize`:@@adminPortfolioManagerDeleteError:Errore durante l'eliminazione dell'elemento del portfolio: ${err.message || 'Errore sconosciuto.'}`;
-              if (isPlatformBrowser(this.platformId)) { // Protezione SSR
+              if (isPlatformBrowser(this.platformId)) {
                 this.snackBar.open(this.errorMessage ?? '', $localize`:@@commonCloseButton:Chiudi`, { duration: 5000 });
               }
               console.error('Errore eliminazione portfolio:', err);
@@ -408,7 +404,9 @@ export class AdminPortfolioManagerComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Modificato: trackByFn ora usa l'ID univoco del FormGroup
   trackByFn(index: number, item: AbstractControl): any {
-    return index;
+    return item.get('id')?.value || index; // Usa l'ID se presente, altrimenti l'indice
   }
 }
+

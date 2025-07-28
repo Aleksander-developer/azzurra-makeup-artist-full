@@ -1,3 +1,4 @@
+
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
@@ -13,12 +14,6 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
-      "i18n": {
-        "sourceLocale": "it",
-        "locales": {
-          "en": "src/locale/messages.en.xlf"
-        }
-      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -35,26 +30,20 @@
             "assets": [
               {
                 "glob": "favicon.ico",
-                "input": "src/public",
+                "input": "src",
                 "output": "/"
               },
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/rose-red.css",
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
-            "scripts": [],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
               "localize": ["it", "en"],
-              "outputHashing": "all",
               "budgets": [
                 {
                   "type": "initial",
@@ -66,7 +55,8 @@
                   "maximumWarning": "10kb",
                   "maximumError": "20kb"
                 }
-              ]
+              ],
+              "outputHashing": "all"
             },
             "development": {
               "optimization": false,
@@ -85,6 +75,12 @@
             },
             "development": {
               "buildTarget": "azzurra-makeup-artist-fe:build:development"
+            },
+            "en": {
+              "buildTarget": "azzurra-makeup-artist-fe:build:development,en"
+            },
+            "it": {
+              "buildTarget": "azzurra-makeup-artist-fe:build:development,it"
             }
           },
           "defaultConfiguration": "development"
@@ -94,29 +90,19 @@
           "options": {
             "outputPath": "dist/azzurra-makeup-artist-fe/server",
             "main": "server.ts",
-            "tsConfig": "tsconfig.server.json",
-            "inlineStyleLanguage": "scss"
+            "tsConfig": "tsconfig.server.json"
           },
           "configurations": {
             "production": {
-              "outputHashing": "all"
+              "optimization": true,
+              "sourceMap": false
             },
             "development": {
               "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
-        },
-        "prerender": {
-          "builder": "@angular-devkit/build-angular:prerender",
-          "options": {
-            "browserTarget": "azzurra-makeup-artist-fe:build:production",
-            "serverTarget": "azzurra-makeup-artist-fe:server:production",
-            "routes": ["/", "/en"]
-          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -129,21 +115,20 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing",
-              "@angular/localize/init"
+              "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "favicon.ico",
-                "input": "src/public",
+                "input": "src",
                 "output": "/"
               },
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/rose-red.css",
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -152,8 +137,15 @@
       }
     }
   },
+
+  "i18n": {
+    "sourceLocale": "it",
+    "locales": {
+      "en": "src/locale/messages.en.xlf"
+    }
+  },
+
   "cli": {
     "analytics": false
   }
 }
-
