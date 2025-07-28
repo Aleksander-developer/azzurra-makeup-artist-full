@@ -65,7 +65,7 @@ steps:
   - 'managed'
   - '--region'
   - 'europe-west1'
-  - '--allow-unauthenticated' # Il frontend dovrebbe essere pubblico per gli utenti
+  - '--no-allow-unauthenticated' # <-- MODIFICATO QUI: Il frontend sarà accessibile solo con autenticazione Google
   - '--port'
   - '4000' # Porta del server Angular SSR
   - '--project'
