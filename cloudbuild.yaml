@@ -82,6 +82,6 @@ substitutions:
   _CLOUDINARY_API_SECRET: 'Ejnkvn9VPh1V5zZQALk9_dluyS0' # Idealmente da Secret Manager
   _BACKEND_API_KEY: 'azzu-best-makeup-artist-241217dic' # Idealmente da Secret Manager
 
-# NUOVA SEZIONE: Opzioni di build per la gestione dei log
+# NUOVA SEZIONE: Opzioni di build per la gestione dei loggg
 options:
   logging: CLOUD_LOGGING_ONLY # Invia i log solo a Cloud Logging
