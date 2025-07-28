@@ -1,58 +1,38 @@
 // src/app/services/portfolio.service.ts
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators'; // Rimosso 'delay'
+import { HttpClient, HttpHeaders } from '@angular/common/http'; // <-- Importa HttpClient e HttpHeaders
+import { Observable, throwError } from 'rxjs'; // Rimosso 'of'
+import { catchError } from 'rxjs/operators';
 import { PortfolioImage, PortfolioItem } from '../pages/portfolio/portfolio-item.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PortfolioService {
-  private nextId = 1; // Contatore per ID unici
-  private mockPortfolioItems: PortfolioItem[] = [
-    {
-      id: 'item1',
-      title: 'Trucco Sposa Classico',
-      subtitle: 'Look naturale e luminoso',
-      description: 'Un trucco elegante e senza tempo, perfetto per il giorno più bello.',
-      category: 'Sposa',
-      images: [
-        { src: 'https://placehold.co/600x400/FFC0CB/FFFFFF?text=Sposa1', alt: 'Sposa 1' },
-        { src: 'https://placehold.co/600x400/FFC0CB/FFFFFF?text=Sposa2', alt: 'Sposa 2' }
-      ],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    {
-      id: 'item2',
-      title: 'Trucco Fotografico Moda',
-      subtitle: 'Servizio per rivista',
-      description: 'Make-up audace e d\'impatto per shooting fotografici professionali.',
-      category: 'Editoriale',
-      images: [
-        { src: 'https://placehold.co/600x400/E6E6FA/333333?text=Moda1', alt: 'Moda 1' },
-        { src: 'https://placehold.co/600x400/E6E6FA/333333?text=Moda2', alt: 'Moda 2' }
-      ],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }
-  ];
+  // URL del tuo backend deployato su Cloud Run
+  private apiUrl = 'https://azzurra-backend-1094999227512.europe-west1.run.app/api'; // <-- NUOVO: URL del Backend
+  // La tua chiave API segreta che hai impostato come variabile d'ambiente nel backend
+  private apiKey = 'azzu-best-makeup-artist-241217dic'; // <-- NUOVO: La tua API Key
 
-  constructor() {
-    const maxId = this.mockPortfolioItems.reduce((max, item) => {
-      const idNum = parseInt(item.id?.replace('item', '') || '0');
-      return idNum > max ? idNum : max;
-    }, 0);
-    this.nextId = maxId + 1;
+  constructor(private http: HttpClient) { } // <-- NUOVO: Inietta HttpClient
+
+  // Metodo helper per ottenere gli headers con la chiave API
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'x-api-key': this.apiKey // Aggiunge la chiave API all'header
+    });
   }
 
   getPortfolioItems(): Observable<PortfolioItem[]> {
-    return of(this.mockPortfolioItems); // Rimosso delay
+    return this.http.get<PortfolioItem[]>(`${this.apiUrl}/portfolio`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
   }
 
-  getPortfolioItemById(id: string): Observable<PortfolioItem | undefined> {
-    const item = this.mockPortfolioItems.find(p => p.id === id);
-    return of(item); // Rimosso delay
+  getPortfolioItemById(id: string): Observable<PortfolioItem> {
+    return this.http.get<PortfolioItem>(`${this.apiUrl}/portfolio/${id}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   addPortfolioItem(
@@ -60,40 +40,20 @@ export class PortfolioService {
     newFiles: File[],
     imagesMetadata: PortfolioImage[]
   ): Observable<PortfolioItem> {
-    return of(null).pipe(
-      // Rimosso delay
-      map(() => {
-        const newId = `item${this.nextId++}`;
-        const uploadedImageUrls: PortfolioImage[] = [];
+    const formData = new FormData();
 
-        const newImagesMetadata = imagesMetadata.filter(img => img.isNew && img.file instanceof File);
+    // Aggiungi i dati dell'elemento al FormData
+    // Converti l'oggetto in JSON e poi aggiungilo come stringa
+    formData.append('itemData', JSON.stringify(itemData));
+    formData.append('imagesMetadata', JSON.stringify(imagesMetadata));
 
-        newImagesMetadata.forEach((meta) => {
-          const file = meta.file as File;
-          const mockUrl = `https://mock-storage.com/images/${newId}/${file.name}`;
-          uploadedImageUrls.push({
-            src: mockUrl,
-            description: meta.description || '',
-            alt: meta.alt || file.name,
-            isNew: false
-          });
-        });
+    // Aggiungi i nuovi file al FormData
+    newFiles.forEach((file, index) => {
+      formData.append(`files`, file, file.name); // 'files' deve corrispondere al nome del campo nel backend (multer)
+    });
 
-        const existingImages = imagesMetadata.filter(img => !img.isNew);
-        const finalImages = existingImages.concat(uploadedImageUrls);
-
-        const newItem: PortfolioItem = {
-          id: newId,
-          ...itemData,
-          images: finalImages,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        };
-        this.mockPortfolioItems.push(newItem);
-        console.log('Elemento aggiunto (mock):', newItem);
-        return newItem;
-      }),
-      catchError(err => throwError(() => new Error('Errore simulato durante l\'aggiunta del portfolio: ' + err.message)))
+    return this.http.post<PortfolioItem>(`${this.apiUrl}/portfolio`, formData, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
     );
   }
 
@@ -103,56 +63,42 @@ export class PortfolioService {
     newFiles: File[],
     imagesMetadata: PortfolioImage[]
   ): Observable<PortfolioItem> {
-    return of(null).pipe(
-      // Rimosso delay
-      map(() => {
-        const index = this.mockPortfolioItems.findIndex(item => item.id === id);
-        if (index === -1) {
-          throw new Error('Elemento non trovato.');
-        }
+    const formData = new FormData();
 
-        const uploadedImageUrls: PortfolioImage[] = [];
+    // Aggiungi i dati dell'elemento al FormData
+    formData.append('itemData', JSON.stringify(itemData));
+    formData.append('imagesMetadata', JSON.stringify(imagesMetadata));
 
-        newFiles.forEach(file => {
-          const correspondingMetadata = imagesMetadata.find(img => img.isNew && img.file === file);
-          const mockUrl = `https://mock-storage.com/images/${id}/${file.name}`;
-          uploadedImageUrls.push({
-            src: mockUrl,
-            description: correspondingMetadata?.description || '',
-            alt: correspondingMetadata?.alt || file.name,
-            isNew: false
-          });
-        });
+    // Aggiungi i nuovi file al FormData
+    newFiles.forEach((file, index) => {
+      formData.append(`files`, file, file.name); // 'files' deve corrispondere al nome del campo nel backend (multer)
+    });
 
-        const existingImages = imagesMetadata.filter(img => !img.isNew);
-        const finalImages = existingImages.concat(uploadedImageUrls);
-
-        const updatedItem: PortfolioItem = {
-          ...this.mockPortfolioItems[index],
-          ...itemData,
-          images: finalImages,
-          updatedAt: new Date()
-        };
-        this.mockPortfolioItems[index] = updatedItem;
-        console.log('Elemento aggiornato (mock):', updatedItem);
-        return updatedItem;
-      }),
-      catchError(err => throwError(() => new Error('Errore simulato durante l\'aggiornamento del portfolio: ' + err.message)))
+    return this.http.put<PortfolioItem>(`${this.apiUrl}/portfolio/${id}`, formData, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
     );
   }
 
   deletePortfolioItem(id: string): Observable<void> {
-    return of(null).pipe(
-      // Rimosso delay
-      map(() => {
-        const initialLength = this.mockPortfolioItems.length;
-        this.mockPortfolioItems = this.mockPortfolioItems.filter(item => item.id !== id);
-        if (this.mockPortfolioItems.length === initialLength) {
-          throw new Error('Elemento non trovato per l\'eliminazione.');
-        }
-        console.log('Elemento eliminato (mock):', id);
-      }),
-      catchError(err => throwError(() => new Error('Errore simulato durante l\'eliminazione del portfolio: ' + err.message)))
+    return this.http.delete<void>(`${this.apiUrl}/portfolio/${id}`, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
     );
+  }
+
+  // Gestione degli errori HTTP
+  private handleError(error: any): Observable<never> {
+    console.error('Errore API:', error);
+    let errorMessage = 'Si è verificato un errore sconosciuto.';
+    if (error.error instanceof ErrorEvent) {
+      // Errore lato client o di rete
+      errorMessage = `Errore: ${error.error.message}`;
+    } else {
+      // Errore lato server
+      errorMessage = `Codice errore: ${error.status}\nMessaggio: ${error.message}`;
+      if (error.error && error.error.message) {
+        errorMessage = `Codice errore: ${error.status}\nMessaggio: ${error.error.message}`;
+      }
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

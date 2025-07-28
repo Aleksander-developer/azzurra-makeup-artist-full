@@ -1,4 +1,3 @@
-
 {
   "name": "azzurra-makeup-artist-fe",
   "version": "0.0.0",
@@ -7,7 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration=production --localize",
-    "postbuild": "cp src/favicon.ico dist/azzurra-makeup-artist-fe/browser/favicon.ico",
+    "postbuild": "echo 'Favicon will be handled by Nginx configuration, no direct copy needed.'",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:ssr": "ng build --configuration=production --localize && ng run azzurra-makeup-artist-fe:server:production",

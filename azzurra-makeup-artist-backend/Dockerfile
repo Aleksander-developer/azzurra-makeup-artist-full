@@ -1,36 +1,37 @@
 # azzurra-makeup-artist-backend/Dockerfile
-# Usa un'immagine Node.js ufficiale come base
+# Fase di build
 FROM node:20-slim as build
 
 # Imposta la directory di lavoro all'interno del container
 WORKDIR /app
 
 # Copia i file package.json e package-lock.json
-# per installare le dipendenze
-COPY azzurra-makeup-artist-backend/package*.json ./
+# Questi file sono nella radice del contesto di build (azzurra-makeup-artist-backend/)
+COPY package*.json ./
 
 # Installa le dipendenze di produzione
-RUN npm install --omit=dev
+RUN npm install
 
 # Copia il resto del codice sorgente del backend
-COPY azzurra-makeup-artist-backend/ .
+COPY . .
 
-# Costruisci l'applicazione TypeScript
+# Esegui la build del progetto TypeScript
 RUN npm run build
 
-# Fase di produzione: immagine più leggera
-FROM node:20-slim
+# Fase di produzione
+FROM node:20-slim as production
 
+# Imposta la directory di lavoro
 WORKDIR /app
 
-# Copia solo le dipendenze di produzione e il codice compilato
+# Copia solo i file necessari dalla fase di build
+COPY --from=build /app/package*.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/package*.json ./
 
-# Espone la porta su cui l'applicazione sarà in ascolto
-# Assicurati che questa porta corrisponda a quella usata dal tuo server Express (process.env.PORT o 8080)
+# Espone la porta su cui l'applicazione ascolterà
 EXPOSE 8080
 
 # Comando per avviare l'applicazione
-CMD [ "node", "dist/server.js" ]
+# CORREZIONE QUI: Cambiato da main.js a index.js
+CMD [ "node", "dist/index.js" ]

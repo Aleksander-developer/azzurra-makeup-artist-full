@@ -1,52 +1,41 @@
-# Stage 1: Build dell'applicazione Angular
-# Utilizziamo un'immagine Node.js con Alpine Linux per una dimensione ridotta.
-FROM node:20-alpine AS build
+# azzurra-makeup-artist-fe/Dockerfile (per Angular SSR)
 
-# Imposta la directory di lavoro all'interno del container.
-# Questa sarà la radice del tuo progetto Angular all'interno del container.
+# Fase 1: Build dell'applicazione Angular (client e server)
+FROM node:20-slim as build
+
 WORKDIR /app
 
-# Copia prima i file package.json e package-lock.json.
-# Questo permette a Docker di mettere in cache il layer di installazione delle dipendenze.
+# Copia package.json e package-lock.json per installare le dipendenze
 COPY package*.json ./
 
-# Installa tutte le dipendenze del progetto.
+# Installa le dipendenze di Node.js
 RUN npm install
 
-# Copia il resto dei file dell'applicazione Angular.
+# Copia il resto del codice sorgente del frontend
 COPY . .
 
-# Esegui la build dell'applicazione Angular per la produzione, inclusa la parte SSR.
-# Questo comando compilerà sia il bundle client che quello server.
-# Assicurati che nel tuo package.json ci sia uno script 'build:ssr' o che 'ng build --configuration production' sia sufficiente per SSR.
-# La convenzione di Angular Universal è che il server compilato si trovi in dist/<nome-progetto>/server/main.js
-RUN npm run build:ssr --configuration production
+# Esegui la build completa di Angular SSR in modalità produzione
+# Questo creerà sia il bundle client (in dist/azzurra-makeup-artist-fe/browser)
+# che il bundle server (in dist/azzurra-makeup-artist-fe/server)
+RUN npm run build:ssr -- --output-path=./dist --base-href=/
 
-# Stage 2: Servizio dell'applicazione
-# Utilizziamo un'altra immagine Node.js leggera per il runtime finale.
-# Questo riduce la dimensione dell'immagine finale, includendo solo ciò che serve per eseguire l'app.
-FROM node:20-alpine
+# Fase 2: Servire l'applicazione SSR con Node.js
+# Utilizza l'immagine Node.js per eseguire il server SSR
+FROM node:20-slim as production
 
-# Imposta la directory di lavoro.
 WORKDIR /app
 
-# Copia solo gli artefatti compilati dallo stage di build.
-# La cartella 'dist/azzurra-makeup-artist-fe' conterrà sia 'browser' che 'server'.
-# Assicurati che 'azzurra-makeup-artist-fe' sia il nome del tuo progetto Angular in angular.json.
-COPY --from=build /app/dist/azzurra-makeup-artist-fe/browser ./dist/browser
-COPY --from=build /app/dist/azzurra-makeup-artist-fe/server ./dist/server
+# Copia solo i file necessari dalla fase di build
+# Copia l'intera cartella di output della build SSR
+COPY --from=build /app/dist/azzurra-makeup-artist-fe ./dist/azzurra-makeup-artist-fe
 
-# Copia i file package.json e package-lock.json per installare solo le dipendenze di produzione.
-COPY --from=build /app/package*.json ./
+# Copia le dipendenze di produzione
+COPY --from=build /app/node_modules ./node_modules
 
-# Installa solo le dipendenze necessarie per l'esecuzione in produzione.
-RUN npm install --production
-
-# Espone la porta su cui il server Node.js ascolterà.
-# La porta predefinita per Angular Universal è 4000.
+# Espone la porta su cui il server Node.js di Angular SSR ascolterà
+# Angular SSR di solito ascolta sulla porta 4000 di default, ma Cloud Run userà PORT
 EXPOSE 4000
 
-# Comando per avviare l'applicazione.
-# Questo avvia il server Node.js compilato che serve l'applicazione Angular.
-# Il percorso 'dist/server/main.js' è relativo alla WORKDIR '/app'.
-CMD ["node", "dist/server/main.js"]
+# Comando per avviare l'applicazione SSR
+# Il tuo serve:ssr script punta a dist/azzurra-makeup-artist-fe/server/main.js
+CMD [ "node", "dist/azzurra-makeup-artist-fe/server/main.js" ]
