@@ -65,9 +65,9 @@ steps:
   - 'managed'
   - '--region'
   - 'europe-west1'
-  - '--allow-unauthenticated' # <-- MODIFICATO QUI: Il frontend dovrebbe ora essere pubblico
+  - '--allow-unauthenticated' # Il frontend dovrebbe ora essere pubblico
   - '--port'
-  - '4000' # Porta del server Angular SSR
+  - '80' # <-- MODIFICATO QUI: Nginx ascolta sulla porta 80
   - '--project'
   - '${PROJECT_ID}'
 
