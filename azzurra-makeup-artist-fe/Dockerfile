@@ -17,7 +17,7 @@ COPY . .
 # Esegui la build completa di Angular SSR in modalità produzione
 # Questo creerà sia il bundle client (in dist/azzurra-makeup-artist-fe/browser)
 # che il bundle server (in dist/azzurra-makeup-artist-fe/server)
-RUN npm run build:ssr -- --output-path=./dist --base-href=/
+RUN npm run build:ssr
 
 # Fase 2: Servire l'applicazione SSR con Node.js
 # Utilizza l'immagine Node.js per eseguire il server SSR
