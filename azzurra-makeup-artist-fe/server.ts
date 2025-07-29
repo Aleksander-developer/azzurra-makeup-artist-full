@@ -10,18 +10,16 @@ export async function app(): Promise<express.Express> {
 
   const { AppServerModule } = await import('./src/main.server');
 
-  // ***** MODIFICHE QUI: Percorsi per Cloud Run *****
-  // Cloud Run esegue il server da /usr/src/app (come definito nel Dockerfile)
-  // I file del browser sono in /usr/src/app/browser
-  // I file del server sono in /usr/src/app/server
-  const currentDir = process.cwd(); // Ottiene la directory di lavoro corrente del processo Node.js
-  const browserDistFolder = join(currentDir, 'browser'); // Il tuo Dockerfile copia in /usr/src/app/browser
-  const serverDistFolder = join(currentDir, 'server');   // Il tuo Dockerfile copia in /usr/src/app/server
+  // 🌍 Cartelle distribuzione (Cloud Run: /usr/src/app)
+  const currentDir = process.cwd();
+  const browserDistFolder = join(currentDir, 'browser');
+  const serverDistFolder = join(currentDir, 'server');
 
-  console.log('📁 currentDir:', currentDir);
-  console.log('📁 serverDistFolder:', serverDistFolder);
-  console.log('📁 browserDistFolder:', browserDistFolder);
-  // *************************************************
+  if (process.env['NODE_ENV'] !== 'production') {
+    console.log('📁 currentDir:', currentDir);
+    console.log('📁 serverDistFolder:', serverDistFolder);
+    console.log('📁 browserDistFolder:', browserDistFolder);
+  }
 
   const supportedLocales = ['it', 'en'];
   const defaultLocale = 'it';
@@ -29,27 +27,40 @@ export async function app(): Promise<express.Express> {
   const commonEngine = new CommonEngine();
   server.set('view engine', 'html');
 
-  // Serve gli asset globali dalla root della cartella browser
+  // 🚀 Serve asset statici globali
   server.use(express.static(browserDistFolder, {
     maxAge: '1y',
+    setHeaders: (res, path) => {
+      if (path.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'no-cache');
+      }
+    },
   }));
 
-  // Serve gli asset specifici della lingua
+  // 🚀 Serve asset per ciascuna lingua
   supportedLocales.forEach((locale) => {
-    const localePath = join(browserDistFolder, locale); // Usiamo join qui
+    const localePath = join(browserDistFolder, locale);
     server.use(`/${locale}`, express.static(localePath, {
       maxAge: '1y',
+      setHeaders: (res, path) => {
+        if (path.endsWith('.html')) {
+          res.setHeader('Cache-Control', 'no-cache');
+        }
+      },
     }));
   });
 
-  // SSR per ogni lingua
-  supportedLocales.forEach((locale) => {
-    const localePath = join(browserDistFolder, locale); // Usiamo join qui
-    const indexHtml = join(localePath, 'index.html'); // Usiamo join qui
+  // 🔁 Funzione che esegue SSR per una lingua specifica
+  function renderLocale(locale: string) {
+    const localePath = join(browserDistFolder, locale);
+    const indexHtml = join(localePath, 'index.html');
 
     server.get(`/${locale}*`, async (req, res, next) => {
       try {
-        console.log(`🔄 SSR rendering ${req.originalUrl} → ${indexHtml}`);
+        if (process.env['NODE_ENV'] !== 'production') {
+          console.log(`🔄 SSR rendering ${req.originalUrl} → ${indexHtml}`);
+        }
+
         const html = await commonEngine.render({
           bootstrap: AppServerModule,
           documentFilePath: indexHtml,
@@ -57,25 +68,55 @@ export async function app(): Promise<express.Express> {
           publicPath: localePath,
           providers: [
             { provide: APP_BASE_HREF, useValue: `/${locale}/` },
-            { provide: LOCALE_ID, useValue: locale }
+            { provide: LOCALE_ID, useValue: locale },
           ],
         });
+
         res.send(html);
       } catch (err) {
         console.error(`❌ SSR error for ${req.originalUrl}:`, err);
         next(err);
       }
     });
-  });
+  }
 
-  // Redirect dalla root alla lingua predefinita
+  // 🌐 Configura SSR per tutte le lingue supportate
+  supportedLocales.forEach(renderLocale);
+
+  // 🔁 Redirect root / alla lingua predefinita
   server.get('/', (req, res) => {
     res.redirect(`/${defaultLocale}`);
+  });
+
+  // ⚠️ Catch-all 404 con fallback SSR sulla lingua predefinita
+  server.get('*', async (req, res) => {
+    try {
+      const locale = defaultLocale;
+      const localePath = join(browserDistFolder, locale);
+      const indexHtml = join(localePath, 'index.html');
+
+      const html = await commonEngine.render({
+        bootstrap: AppServerModule,
+        documentFilePath: indexHtml,
+        url: req.originalUrl,
+        publicPath: localePath,
+        providers: [
+          { provide: APP_BASE_HREF, useValue: `/${locale}/` },
+          { provide: LOCALE_ID, useValue: locale },
+        ],
+      });
+
+      res.status(404).send(html);
+    } catch (err) {
+      console.error(`❌ Errore SSR 404 fallback:`, err);
+      res.status(404).send('Pagina non trovata');
+    }
   });
 
   return server;
 }
 
+// ▶️ Avvio server
 async function run(): Promise<void> {
   const port = process.env['PORT'] || 8080;
   const server = await app();
