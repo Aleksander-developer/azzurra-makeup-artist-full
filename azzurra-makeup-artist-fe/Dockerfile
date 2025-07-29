@@ -1,4 +1,4 @@
-# Stage 1: Build Angular app
+# Stage 1: Build Angular SSR App
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -9,17 +9,18 @@ RUN npm ci
 COPY . .
 RUN npm run build:ssr
 
-# Stage 2: Serve via Nginx
-FROM nginx:1.25-alpine AS runtime
+# Stage 2: Run SSR Server
+FROM node:20-alpine
 
-# Copia file statici localizzati (es. dist/azzurra-makeup-artist-fe/browser/it, /en)
-COPY --from=builder /app/dist/azzurra-makeup-artist-fe/browser /usr/share/nginx/html
+WORKDIR /app
 
-# Copia configurazione personalizzata Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copia solo ciò che serve per avviare il server
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/package.json ./
 
-# Porta esposta (Cloud Run ignora ENTRYPOINT, ma richiede che Nginx ascolti sulla porta specificata)
+# La porta usata da Express
 ENV PORT=8080
 EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "dist/azzurra-makeup-artist-fe/server/main.js"]
