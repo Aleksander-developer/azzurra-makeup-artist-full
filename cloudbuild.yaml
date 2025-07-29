@@ -66,8 +66,7 @@ steps:
   - '--region'
   - 'europe-west1'
   - '--allow-unauthenticated' # Il frontend dovrebbe ora essere pubblico
-  - '--port'
-  - '80' # Nginx ascolta sulla porta 80
+  # - '--port' # <-- RIMOSSO QUI: Cloud Run gestirà automaticamente la porta
   - '--project'
   - '${PROJECT_ID}'
 
