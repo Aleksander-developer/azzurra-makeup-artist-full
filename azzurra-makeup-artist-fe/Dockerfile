@@ -25,10 +25,13 @@ FROM nginx:stable-alpine
 # Copia la configurazione Nginx personalizzata
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copia i file compilati di Angular dalla fase di build
-# La cartella 'dist/azzurra-makeup-artist-fe' contiene sia 'browser' che 'server'
-# Nginx sarà configurato per puntare a 'browser'
-COPY --from=build /app/dist/azzurra-makeup-artist-fe /usr/share/nginx/html
+# Copia i file compilati di Angular dalla cartella 'browser' direttamente nella root di Nginx
+# Questo è il punto chiave della correzione
+COPY --from=build /app/dist/azzurra-makeup-artist-fe/browser /usr/share/nginx/html
+
+# Imposta i permessi corretti per i file serviti da Nginx
+RUN chown -R nginx:nginx /usr/share/nginx/html \
+    && chmod -R 755 /usr/share/nginx/html
 
 # Espone la porta 80 (porta predefinita di Nginx)
 EXPOSE 80

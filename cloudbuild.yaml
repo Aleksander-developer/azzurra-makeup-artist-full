@@ -67,7 +67,7 @@ steps:
   - 'europe-west1'
   - '--allow-unauthenticated' # Il frontend dovrebbe ora essere pubblico
   - '--port'
-  - '80' # <-- MODIFICATO QUI: Nginx ascolta sulla porta 80
+  - '80' # Nginx ascolta sulla porta 80
   - '--project'
   - '${PROJECT_ID}'
 
