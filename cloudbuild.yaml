@@ -91,4 +91,3 @@ substitutions:
 # Opzioni di build per la gestione dei log
 options:
   logging: CLOUD_LOGGING_ONLY # Invia i log solo a Cloud Logging
-

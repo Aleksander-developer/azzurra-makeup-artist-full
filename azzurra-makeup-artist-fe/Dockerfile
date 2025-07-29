@@ -20,7 +20,7 @@ COPY . .
 RUN npm run build:ssr
 
 # Fase 2: Servire l'applicazione con Nginx
-FROM nginx:alpine
+FROM nginx:latest-alpine # Usiamo l'ultima versione di Nginx su Alpine
 
 # Installa gettext-base per avere 'envsubst'
 # Questo è necessario per sostituire la variabile d'ambiente PORT in nginx.conf
