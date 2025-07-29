@@ -66,7 +66,7 @@ steps:
   - '--region'
   - 'europe-west1'
   - '--allow-unauthenticated' # Il frontend dovrebbe ora essere pubblico
-  # - '--port' # <-- RIMOSSO QUI: Cloud Run gestirà automaticamente la porta
+  # - '--port' # Cloud Run gestirà automaticamente la porta
   - '--project'
   - '${PROJECT_ID}'
 
@@ -91,3 +91,4 @@ substitutions:
 # Opzioni di build per la gestione dei log
 options:
   logging: CLOUD_LOGGING_ONLY # Invia i log solo a Cloud Logging
+

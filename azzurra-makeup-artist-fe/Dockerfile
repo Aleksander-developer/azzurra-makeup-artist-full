@@ -20,7 +20,7 @@ COPY . .
 RUN npm run build:ssr
 
 # Fase 2: Servire l'applicazione con Nginx
-FROM nginx:stable-alpine
+FROM nginx:latest-alpine # <-- MODIFICATO QUI: Usiamo l'ultima versione di Nginx su Alpine
 
 # Installa gettext-base per avere 'envsubst'
 # Questo è necessario per sostituire la variabile d'ambiente PORT in nginx.conf
@@ -33,6 +33,7 @@ COPY nginx.conf /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist/azzurra-makeup-artist-fe/browser /usr/share/nginx/html
 
 # Imposta i permessi corretti per i file serviti da Nginx
+# Assicurati che l'utente 'nginx' abbia i permessi di lettura
 RUN chown -R nginx:nginx /usr/share/nginx/html \
     && find /usr/share/nginx/html -type d -exec chmod 755 {} \; \
     && find /usr/share/nginx/html -type f -exec chmod 644 {} \;
