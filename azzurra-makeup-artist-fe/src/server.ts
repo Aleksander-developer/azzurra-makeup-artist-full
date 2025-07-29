@@ -1,4 +1,8 @@
 // server.ts
+
+// ✅ AGGIUNGI QUESTA RIGA ALL'INIZIO DEL FILE
+import '@angular/localize/init';
+
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr';
 import express from 'express';

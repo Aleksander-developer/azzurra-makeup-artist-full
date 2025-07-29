@@ -87,7 +87,7 @@
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "dist/azzurra-makeup-artist-fe/server",
+            "outputPath": "dist/server",
             "main": "src/server.ts",
             "tsConfig": "tsconfig.server.json"
           },
