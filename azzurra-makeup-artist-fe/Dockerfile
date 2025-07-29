@@ -20,7 +20,7 @@ COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/package.json ./
 
 # La porta usata da Express
-ENV PORT=8080
+ENV PORT=${PORT}
 EXPOSE 8080
 
 CMD ["node", "dist/azzurra-makeup-artist-fe/server/main.js"]
