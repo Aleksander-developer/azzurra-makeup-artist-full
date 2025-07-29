@@ -19,8 +19,10 @@ COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/package.json ./
 
-# La porta usata da Express
-ENV PORT=${PORT}
+# Espone la porta che il server usa
 EXPOSE 8080
+
+# NON impostare ENV PORT=${PORT} qui perché ${PORT} è una variabile di runtime, non di build.
+# Cloud Run imposta automaticamente la variabile d'ambiente PORT per te.
 
 CMD ["node", "dist/azzurra-makeup-artist-fe/server/main.js"]
