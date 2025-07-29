@@ -28,8 +28,6 @@ EXPOSE 8080
 # NON impostare ENV PORT=${PORT} qui perché ${PORT} è una variabile di runtime, non di build.
 # Cloud Run imposta automaticamente la variabile d'ambiente PORT per te.
 
-# Questo CMD assume che `ng run azzurra-makeup-artist-fe:server:production`
-# generi un file chiamato 'main.js' all'interno di 'dist/azzurra-makeup-artist-fe/server'.
-# Se il nome del file è diverso (es. server.js o un nome con hash),
-# dovrai aggiornare questo percorso in base all'output della tua build Angular SSR.
-CMD ["node", "dist/azzurra-makeup-artist-fe/server/main.js"]
+# Questo CMD ora punta a 'server.js', che sarà il nome fisso
+# grazie alla configurazione di 'outputFileName' in angular.json.
+CMD ["node", "dist/azzurra-makeup-artist-fe/server/server.js"]

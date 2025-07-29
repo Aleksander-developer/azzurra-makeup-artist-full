@@ -89,12 +89,14 @@
           "options": {
             "outputPath": "dist/azzurra-makeup-artist-fe/server",
             "main": "server.ts",
-            "tsConfig": "tsconfig.server.json"
+            "tsConfig": "tsconfig.server.json",
+            "outputFileName": "server.js"
           },
           "configurations": {
             "production": {
               "optimization": true,
-              "sourceMap": false
+              "sourceMap": false,
+              "outputFileName": "server.js"
             },
             "development": {
               "optimization": false,
