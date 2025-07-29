@@ -9,7 +9,7 @@ RUN npm ci
 COPY . .
 RUN npm run build:ssr
 
-# Se vuoi controllare il contenuto della cartella 'server' dopo la build, scommenta la riga sotto:
+# AGGIUNTO PER DEBUG: scommenta questa riga se la build fallisce e vuoi vedere i file generati
 # RUN ls -l dist/azzurra-makeup-artist-fe/server/
 
 # Stage 2: Run SSR Server
@@ -25,9 +25,9 @@ COPY --from=builder /app/package.json ./
 # Espone la porta che il server usa
 EXPOSE 8080
 
-# NON impostare ENV PORT=${PORT} qui perché ${PORT} è una variabile di runtime, non di build.
 # Cloud Run imposta automaticamente la variabile d'ambiente PORT per te.
 
-# Questo CMD ora punta a 'server.js', che sarà il nome fisso
-# grazie alla configurazione di 'outputFileName' in angular.json.
-CMD ["node", "dist/azzurra-makeup-artist-fe/server/server.js"]
+# Questo CMD ora punta al nome del file server con hash.
+# Questo è il file che i tuoi log di build indicano come "src-main-server".
+# Se in futuro vedi un nome diverso nei log di build (es. 123.js), dovrai aggiornare qui.
+CMD ["node", "dist/azzurra-makeup-artist-fe/server/875.js"]
