@@ -8,7 +8,7 @@ import { LOCALE_ID } from '@angular/core';
 export async function app(): Promise<express.Express> {
   const server = express();
 
-  const { AppServerModule } = await import('./src/main.server');
+  const { AppServerModule } = await import('./main.server');
 
   // 🌍 Cartelle distribuzione (Cloud Run: /usr/src/app)
   const currentDir = process.cwd();
