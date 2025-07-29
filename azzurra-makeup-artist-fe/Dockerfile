@@ -26,12 +26,17 @@ FROM nginx:stable-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copia i file compilati di Angular dalla cartella 'browser' direttamente nella root di Nginx
-# Questo è il punto chiave della correzione
+# Questo è il punto chiave della correzione per il 403 Forbidden
 COPY --from=build /app/dist/azzurra-makeup-artist-fe/browser /usr/share/nginx/html
 
 # Imposta i permessi corretti per i file serviti da Nginx
+# Assicurati che l'utente 'nginx' abbia i permessi di lettura
 RUN chown -R nginx:nginx /usr/share/nginx/html \
-    && chmod -R 755 /usr/share/nginx/html
+    && find /usr/share/nginx/html -type d -exec chmod 755 {} \; \
+    && find /usr/share/nginx/html -type f -exec chmod 644 {} \;
+
+# Passa all'utente 'nginx' per l'esecuzione del server
+USER nginx
 
 # Espone la porta 80 (porta predefinita di Nginx)
 EXPOSE 80
