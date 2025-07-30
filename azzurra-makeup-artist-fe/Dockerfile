@@ -3,28 +3,51 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+# Copia package.json e package-lock.json SPECIFICI del frontend
+# I percorsi sono relativi alla radice del contesto di build (il monorepo)
+COPY azzurra-makeup-artist-fe/package.json ./azzurra-makeup-artist-fe/  
+COPY azzurra-makeup-artist-fe/package-lock.json ./azzurra-makeup-artist-fe/ 
+
+# Pulisci la cache di npm per assicurare un'installazione fresca
+RUN npm cache clean --force 
+
+# Imposta la directory di lavoro all'interno della cartella del frontend
+# D'ora in poi, tutti i comandi RUN e COPY . . saranno relativi a questa cartella
+WORKDIR /app/azzurra-makeup-artist-fe 
+
+# Installa le dipendenze del progetto
 RUN npm install
 
-COPY . .
+# Copia il resto dei file sorgente del frontend nella WORKDIR corrente
+COPY azzurra-makeup-artist-fe/. . 
 
-RUN npm run build:ssr
+# Duplica server.ts dalla sua posizione in src/ alla root del WORKDIR
+# Questo è un workaround per l'errore del compilatore TS6053.
+COPY azzurra-makeup-artist-fe/src/server.ts ./ 
+
+# Esegui la build del CLIENT (browser)
+RUN npx ng build --configuration=production --localize
+
+# Esegui la build del SERVER (SSR)
+RUN npx ng run azzurra-makeup-artist-fe:server:production
 
 # Stage 2: Serve the application with a lightweight Node.js server
 FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
-# Copia solo i file essenziali dalla fase di build
-# Adatta i percorsi al nome del tuo progetto frontend: azzurra-makeup-artist-fe
-COPY --from=builder /app/dist/azzurra-makeup-artist-fe/browser ./browser
-COPY --from=builder /app/dist/azzurra-makeup-artist-fe/server ./server
-COPY --from=builder /app/package.json ./
+# Copia il bundle del server SSR (main.js)
+# Il percorso di origine è /app/dist/azzurra-makeup-artist-fe/server/
+COPY --from=builder /app/dist/azzurra-makeup-artist-fe/server/ ./
 
-# Installa solo le dipendenze di produzione per il server Node.js
-RUN npm install --only=production
+# Copia la cartella del browser buildata (necessaria per servire asset statici in SSR)
+# Il percorso di origine è /app/dist/azzurra-makeup-artist-fe/browser/
+COPY --from=builder /app/dist/azzurra-makeup-artist-fe/browser/ ./browser
+
+# Copia package.json e node_modules per il runtime
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/node_modules ./node_modules/
 
 EXPOSE 8080
 
-# Il main.js del server si trova in ./server/main.js all'interno di /usr/src/app
 CMD [ "node", "./server/main.js" ]
