@@ -8,8 +8,8 @@ steps:
   - 'build'
   - '-t'
   - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-backend-repo/azzurra-makeup-artist-backend'
-  - 'azzurra-makeup-artist-backend/'
-  dir: '.'
+  - 'azzurra-makeup-artist-backend/' # Percorso al Dockerfile del backend
+  dir: '.' # Il contesto di build è la radice del monorepo
 
 # 2. Deploy del Backend su Cloud Run (rimane invariato)
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -25,10 +25,11 @@ steps:
   - 'managed'
   - '--region'
   - 'europe-west1'
-  - '--no-allow-unauthenticated'
+  - '--no-allow-unauthenticated' # Mantiene il backend protetto dalla policy dell'organizzazione
   - '--port'
   - '8080'
   - '--set-env-vars'
+  # Le variabili d'ambiente verranno passate tramite sostituzioni del trigger di Cloud Build
   - 'MONGO_URI=${_MONGO_URI},EMAIL_USER=${_EMAIL_USER},EMAIL_PASS=${_EMAIL_PASS},EMAIL_DESTINATION=${_EMAIL_DESTINATION},SITE_NAME=${_SITE_NAME},CLOUDINARY_CLOUD_NAME=${_CLOUDINARY_CLOUD_NAME},CLOUDINARY_API_KEY=${_CLOUDINARY_API_KEY},CLOUDINARY_API_SECRET=${_CLOUDINARY_API_SECRET},API_KEY=${_BACKEND_API_KEY}'
   - '--project'
   - '${PROJECT_ID}'
@@ -44,7 +45,7 @@ steps:
     - 'run'
     - 'deploy'
     - 'azzurra-frontend'
-    - '--source' # <-- CAMBIATO: Punti alla cartella sorgente del frontend
+    - '--source' # <-- CAMBIATO: Usa la cartella sorgente
     - 'azzurra-makeup-artist-fe/' # <-- La cartella del tuo progetto Angular
     - '--platform'
     - 'managed'
@@ -52,26 +53,34 @@ steps:
     - 'europe-west1'
     - '--allow-unauthenticated'
     - '--port'
-    - '8080' # Buildpacks rileveranno o useranno questa porta per Node.js
+    - '8080'
     - '--timeout'
-    - '300s' # Importante mantenere un timeout sufficiente per SSR
+    - '300s'
     - '--project'
     - '${PROJECT_ID}'
-    # Variabili d'ambiente per Buildpacks (spesso necessarie per SSR)
     env:
-      # Indica a Buildpacks di eseguire prima lo script 'build:ssr'
-      # e poi lo script 'serve' o 'start' per avviare il server.
-      # Assicurati che il tuo package.json abbia uno script 'start' o 'serve'
-      # che avvia il tuo server Node.js compilato.
-      # Ad esempio: "start": "node dist/azzurra-makeup-artist-fe/server/main.js"
-      - 'GOOGLE_NODE_RUN_SCRIPTS=build:ssr,serve:ssr' # <-- Questo è CRUCIALE per SSR
-                                                      # Utilizza il tuo "serve:ssr" script
-                                                      # definito nel package.json
+      - 'GOOGLE_NODE_RUN_SCRIPTS=build:ssr,serve:ssr' # Cruciale per SSR con Buildpacks
 
 # Definisce le immagini che verranno create e salvate in Artifact Registry
-# Rimuovi l'immagine del frontend da qui, Buildpacks la gestirà automaticamente
-images:
+# ATTENZIONE: La riga 'images:' è un'intestazione per una lista.
+# Se hai solo un elemento, assicurati che sia indentato correttamente sotto.
+# Se hai rimosso l'elemento 'azzurra-frontend', ora ci deve essere solo quello del backend.
+images: # <--- Questa è probabilmente la riga 60 o vicino.
 - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-backend-repo/azzurra-makeup-artist-backend'
-# - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend' # Rimosso/commentato
+# La riga per 'azzurra-frontend' è stata RIMOSSA COMPLETAMENTE da qui.
 
-# ... (rest of substitutions and options)
+# Definisce le sostituzioni per le variabili d'ambiente sensibili
+substitutions:
+  _MONGO_URI: 'mongodb+srv://aleksandernikollibusiness:FVjQJt29mxrE0ho3@clusterazzurra.cbgy999.mongodb.net/?retryWrites=true&w=majority&appName=ClusterAzzurra'
+  _EMAIL_USER: 'azzurraangius95@gmail.com'
+  _EMAIL_PASS: 'kpvjrfgybybpwycv'
+  _EMAIL_DESTINATION: 'azzurraangius95@gmail.com'
+  _SITE_NAME: 'Azzurra Makeup Artist'
+  _CLOUDINARY_CLOUD_NAME: 'ddqilzddj'
+  _CLOUDINARY_API_KEY: '493947727933171'
+  _CLOUDINARY_API_SECRET: 'Ejnkvn9VPh1V5zZQALk9_dluyS0'
+  _BACKEND_API_KEY: 'azzu-best-makeup-artist-241217dic'
+
+# Opzioni di build per la gestione dei log
+options:
+  logging: CLOUD_LOGGING_ONLY
