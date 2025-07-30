@@ -36,16 +36,17 @@ steps:
 # Rimosso: 3. Build dell'immagine Docker del Frontend (usiamo Buildpacks invece)
 # Rimosso: 3.5. Push esplicito dell'immagine Docker del Frontend
 
+# Riga 25 (o giù di lì)
 # 4. Deploy del Frontend su Cloud Run usando Buildpacks
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  id: 'deploy-frontend'
-  entrypoint: gcloud
-  args:
-    - 'run'
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk' 
+  id: 'deploy-frontend'                            
+  entrypoint: gcloud                               
+  args:                                            
+    - 'run'                                        
     - 'deploy'
     - 'azzurra-frontend'
-    - '--source' 
-    - 'azzurra-makeup-artist-fe/' 
+    - '--source'
+    - 'azzurra-makeup-artist-fe/'
     - '--platform'
     - 'managed'
     - '--region'
@@ -56,10 +57,9 @@ steps:
     - '--timeout'
     - '300s'
     - '--project'
-    - '${PROJECT_ID}'
-    env:
-      - 'GOOGLE_NODE_RUN_SCRIPTS=build:ssr,serve:ssr' 
-
+    - '${PROJECT_ID}' 
+  env:                                             
+    - 'GOOGLE_NODE_RUN_SCRIPTS=build:ssr,serve:ssr'
 # Definisce le immagini che verranno create e salvate in Artifact Registry
 # Questo è il blocco corretto della sezione 'images:'. Non aggiungere righe vuote o commenti qui.
 images:
