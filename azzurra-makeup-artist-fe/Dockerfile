@@ -17,10 +17,10 @@ WORKDIR /app/azzurra-makeup-artist-fe
 RUN npm install
 
 # Copia il resto dei file sorgente del frontend nella WORKDIR corrente
+# Ora server.ts si trova qui direttamente dopo lo spostamento
 COPY azzurra-makeup-artist-fe/. . 
 
-# RIGA RIMOSSA: NON copiare server.ts nella root del WORKDIR
-# COPY azzurra-makeup-artist-fe/src/server.ts ./ 
+# RIGA RIMOSSA: NON SERVE PIÙ IL WORKAROUND DI COPIA DI server.ts
 
 # Esegui la build del CLIENT (browser)
 RUN npx ng build --configuration=production --localize
