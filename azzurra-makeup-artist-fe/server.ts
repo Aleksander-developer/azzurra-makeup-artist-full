@@ -83,6 +83,11 @@ export async function app(): Promise<express.Express> {
   // 🌐 Configura SSR per tutte le lingue supportate
   supportedLocales.forEach(renderLocale);
 
+  // 🎯 Servizio diretto del favicon
+  server.get('/favicon.ico', (req, res) => {
+    res.sendFile(join(browserDistFolder, 'favicon.ico'));
+  });
+
   // 🔁 Redirect root / alla lingua predefinita
   server.get('/', (req, res) => {
     res.redirect(`/${defaultLocale}`);
