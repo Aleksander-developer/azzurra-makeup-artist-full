@@ -11,7 +11,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "prebuild:ssr": "rm -rf dist/",
-    "build:ssr": "echo 'Build process will be handled directly in Dockerfile'",
+    "build:ssr": "ng build --configuration=production --localize",
     "serve:ssr": "node dist/azzurra-makeup-artist-fe/server/main.js",
     "serve:ssr:azzurra-makeup-artist-fe": "node dist/azzurra-makeup-artist-fe/browser/server/server.mjs",
     "serve:ssr:dev": "ng serve --hmr --open"
