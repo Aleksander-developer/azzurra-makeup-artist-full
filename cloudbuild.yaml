@@ -1,4 +1,40 @@
-# FRONTEND: Build immagine Docker personalizzata
+# cloudbuild.yaml (nella radice del repository azzurra-makeup-artist-full)
+
+steps:
+# 1. BACKEND: Build immagine Docker
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'build-backend'
+  args:
+    - 'build'
+    - '-t'
+    - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-backend-repo/azzurra-makeup-artist-backend'
+    - 'azzurra-makeup-artist-backend/' # Percorso al Dockerfile del backend
+  dir: '.' # Il contesto di build è la radice del monorepo
+
+# 2. BACKEND: Deploy su Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  id: 'deploy-backend'
+  entrypoint: gcloud
+  args:
+    - 'run'
+    - 'deploy'
+    - 'azzurra-backend'
+    - '--image'
+    - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-backend-repo/azzurra-makeup-artist-backend'
+    - '--platform'
+    - 'managed'
+    - '--region'
+    - 'europe-west1'
+    - '--no-allow-unauthenticated' # Mantiene il backend protetto dalla policy dell'organizzazione
+    - '--port'
+    - '8080'
+    - '--set-env-vars'
+    # Le variabili d'ambiente verranno passate tramite sostituzioni del trigger di Cloud Build
+    - 'MONGO_URI=${_MONGO_URI},EMAIL_USER=${_EMAIL_USER},EMAIL_PASS=${_EMAIL_PASS},EMAIL_DESTINATION=${_EMAIL_DESTINATION},SITE_NAME=${_SITE_NAME},CLOUDINARY_CLOUD_NAME=${_CLOUDINARY_CLOUD_NAME},CLOUDINARY_API_KEY=${_CLOUDINARY_API_KEY},CLOUDINARY_API_SECRET=${_CLOUDINARY_API_SECRET},API_KEY=${_BACKEND_API_KEY}'
+    - '--project'
+    - '${PROJECT_ID}'
+
+# 3. FRONTEND: Build immagine Docker personalizzata
 - name: 'gcr.io/cloud-builders/docker'
   id: 'build-frontend'
   args:
@@ -6,10 +42,10 @@
     - '-t'
     - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend'
     - '-f'
-    - 'azzurra-makeup-artist-fe/Dockerfile'
-    - '.' # Docker context: radice del progetto
+    - 'azzurra-makeup-artist-fe/Dockerfile' # Specifica il Dockerfile nella sottocartella
+    - '.' # Docker context: radice del monorepo
 
-# FRONTEND: Deploy su Cloud Run
+# 4. FRONTEND: Deploy su Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   id: 'deploy-frontend'
   entrypoint: gcloud
@@ -28,3 +64,24 @@
     - '8080'
     - '--project'
     - '${PROJECT_ID}'
+
+# Definisce le immagini che verranno create e salvate in Artifact Registry
+images:
+- 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-backend-repo/azzurra-makeup-artist-backend'
+- 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend'
+
+# Definisce le sostituzioni per le variabili d'ambiente sensibili
+substitutions:
+  _MONGO_URI: 'mongodb+srv://aleksandernikollibusiness:FVjQJt29mxrE0ho3@clusterazzurra.cbgy999.mongodb.net/?retryWrites=true&w=majority&appName=ClusterAzzurra'
+  _EMAIL_USER: 'azzurraangius95@gmail.com'
+  _EMAIL_PASS: 'kpvjrfgybybpwycv' # Idealmente da Secret Manager
+  _EMAIL_DESTINATION: 'azzurraangius95@gmail.com'
+  _SITE_NAME: 'Azzurra Makeup Artist'
+  _CLOUDINARY_CLOUD_NAME: 'ddqilzddj'
+  _CLOUDINARY_API_KEY: '493947727933171'
+  _CLOUDINARY_API_SECRET: 'Ejnkvn9VPh1V5zZQALk9_dluyS0' # Idealmente da Secret Manager
+  _BACKEND_API_KEY: 'azzu-best-makeup-artist-241217dic' # Idealmente da Secret Manager
+
+# Opzioni di build per la gestione dei log
+options:
+  logging: CLOUD_LOGGING_ONLY
