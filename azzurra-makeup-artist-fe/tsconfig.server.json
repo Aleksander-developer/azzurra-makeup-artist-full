@@ -11,7 +11,7 @@
     "moduleResolution": "node"
   },
   "files": [
-    "src/server.ts",          
+    "src/server.ts",
     "src/main.server.ts"
   ],
   "include": [

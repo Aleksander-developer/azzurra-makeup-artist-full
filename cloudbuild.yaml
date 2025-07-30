@@ -1,7 +1,7 @@
 # cloudbuild.yaml (nella radice del repository azzurra-makeup-artist-full)
 
 steps:
-# 1. Build dell'immagine Docker del Backend (rimane invariato)
+# 1. Build dell'immagine Docker del Backend
 - name: 'gcr.io/cloud-builders/docker'
   id: 'build-backend'
   args:
@@ -11,7 +11,7 @@ steps:
   - 'azzurra-makeup-artist-backend/' # Percorso al Dockerfile del backend
   dir: '.' # Il contesto di build è la radice del monorepo
 
-# 2. Deploy del Backend su Cloud Run (rimane invariato)
+# 2. Deploy del Backend su Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   id: 'deploy-backend'
   entrypoint: gcloud
@@ -34,10 +34,18 @@ steps:
   - '--project'
   - '${PROJECT_ID}'
 
-# Rimosso: 3. Build dell'immagine Docker del Frontend (usiamo Buildpacks invece)
-# Rimosso: 3.5. Push esplicito dell'immagine Docker del Frontend
+# FRONTEND: Build immagine Docker personalizzata
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'build-frontend'
+  args:
+    - 'build'
+    - '-t'
+    - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend'
+    - '-f'
+    - 'azzurra-makeup-artist-fe/Dockerfile'
+    - '.' # Docker context: radice del progetto
 
-# 3. Deploy del Frontend su Cloud Run usando Buildpacks
+# FRONTEND: Deploy su Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   id: 'deploy-frontend'
   entrypoint: gcloud
@@ -45,8 +53,8 @@ steps:
     - 'run'
     - 'deploy'
     - 'azzurra-frontend'
-    - '--source'
-    - 'azzurra-makeup-artist-fe/'
+    - '--image'
+    - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend'
     - '--platform'
     - 'managed'
     - '--region'
@@ -54,19 +62,15 @@ steps:
     - '--allow-unauthenticated'
     - '--port'
     - '8080'
-    - '--timeout'
-    - '300s'
     - '--project'
     - '${PROJECT_ID}'
-  env: 
-    - 'GOOGLE_NODE_RUN_SCRIPTS=build:ssr,serve:ssr' # <--- QUESTA RIGA: Deve essere indentata di 2 spazi rispetto a 'env:'
 
-# Definisce le immagini che verranno create e salvate in Artifact Registry
+# IMMAGINI da salvare in Artifact Registry
 images:
 - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-backend-repo/azzurra-makeup-artist-backend'
-# Rimuovi la riga per l'immagine frontend se era qui.
+- 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend'
 
-# Definisce le sostituzioni per le variabili d'ambiente sensibili
+# Sostituzioni ENV
 substitutions:
   _MONGO_URI: 'mongodb+srv://aleksandernikollibusiness:FVjQJt29mxrE0ho3@clusterazzurra.cbgy999.mongodb.net/?retryWrites=true&w=majority&appName=ClusterAzzurra'
   _EMAIL_USER: 'azzurraangius95@gmail.com'
@@ -78,6 +82,6 @@ substitutions:
   _CLOUDINARY_API_SECRET: 'Ejnkvn9VPh1V5zZQALk9_dluyS0'
   _BACKEND_API_KEY: 'azzu-best-makeup-artist-241217dic'
 
-# Opzioni di build per la gestione dei log
+# Logging
 options:
   logging: CLOUD_LOGGING_ONLY
