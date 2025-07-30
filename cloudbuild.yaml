@@ -1,17 +1,17 @@
 # cloudbuild.yaml (nella radice del repository azzurra-makeup-artist-full)
 
 steps:
-# 1. Build dell'immagine Docker del Backend
+# 1. Build dell'immagine Docker del Backend (rimane invariato)
 - name: 'gcr.io/cloud-builders/docker'
   id: 'build-backend'
   args:
   - 'build'
   - '-t'
   - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-backend-repo/azzurra-makeup-artist-backend'
-  - 'azzurra-makeup-artist-backend/' # Percorso al Dockerfile del backend
-  dir: '.' # Il contesto di build è la radice del monorepo
+  - 'azzurra-makeup-artist-backend/'
+  dir: '.'
 
-# 2. Deploy del Backend su Cloud Run
+# 2. Deploy del Backend su Cloud Run (rimane invariato)
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   id: 'deploy-backend'
   entrypoint: gcloud
@@ -25,72 +25,53 @@ steps:
   - 'managed'
   - '--region'
   - 'europe-west1'
-  - '--no-allow-unauthenticated' # Mantiene il backend protetto dalla policy dell'organizzazione
+  - '--no-allow-unauthenticated'
   - '--port'
   - '8080'
   - '--set-env-vars'
-  # Le variabili d'ambiente verranno passate tramite sostituzioni del trigger di Cloud Build
   - 'MONGO_URI=${_MONGO_URI},EMAIL_USER=${_EMAIL_USER},EMAIL_PASS=${_EMAIL_PASS},EMAIL_DESTINATION=${_EMAIL_DESTINATION},SITE_NAME=${_SITE_NAME},CLOUDINARY_CLOUD_NAME=${_CLOUDINARY_CLOUD_NAME},CLOUDINARY_API_KEY=${_CLOUDINARY_API_KEY},CLOUDINARY_API_SECRET=${_CLOUDINARY_API_SECRET},API_KEY=${_BACKEND_API_KEY}'
   - '--project'
   - '${PROJECT_ID}'
 
-# 3. Build dell'immagine Docker del Frontend
-- name: 'gcr.io/cloud-builders/docker'
-  id: 'build-frontend'
-  args:
-  - 'build'
-  - '-t'
-  - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend'
-  - 'azzurra-makeup-artist-fe/' # Percorso al Dockerfile del frontend
-  dir: '.' # Il contesto di build è la radice del monorepo
+# Rimosso: 3. Build dell'immagine Docker del Frontend (usiamo Buildpacks invece)
+# Rimosso: 3.5. Push esplicito dell'immagine Docker del Frontend
 
-# NUOVO STEP: 3.5. Push esplicito dell'immagine Docker del Frontend
-- name: 'gcr.io/cloud-builders/docker'
-  id: 'push-frontend'
-  args:
-  - 'push'
-  - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend'
-
-# 4. Deploy del Frontend su Cloud Run
+# 4. Deploy del Frontend su Cloud Run usando Buildpacks
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   id: 'deploy-frontend'
   entrypoint: gcloud
   args:
-  - 'run'
-  - 'deploy'
-  - 'azzurra-frontend'
-  - '--image'
-  - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend'
-  - '--platform'
-  - 'managed'
-  - '--region'
-  - 'europe-west1'
-  - '--allow-unauthenticated' # Il frontend dovrebbe ora essere pubblico
-  - '--port' # <--- AGGIUNTA FONDAMENTALE: specifica la porta su cui l'app ascolta
-  - '8080'   # <--- La porta su cui il tuo server Node.js è configurato per ascoltare
-  - '--timeout' # <--- AGGIUNTA OPZIONALE: aumenta il timeout per l'avvio del container
-  - '300s' # Esempio: 5 minuti. Aumenta se l'app impiega molto ad avviarsi
-  - '--project'
-  - '${PROJECT_ID}'
+    - 'run'
+    - 'deploy'
+    - 'azzurra-frontend'
+    - '--source' # <-- CAMBIATO: Punti alla cartella sorgente del frontend
+    - 'azzurra-makeup-artist-fe/' # <-- La cartella del tuo progetto Angular
+    - '--platform'
+    - 'managed'
+    - '--region'
+    - 'europe-west1'
+    - '--allow-unauthenticated'
+    - '--port'
+    - '8080' # Buildpacks rileveranno o useranno questa porta per Node.js
+    - '--timeout'
+    - '300s' # Importante mantenere un timeout sufficiente per SSR
+    - '--project'
+    - '${PROJECT_ID}'
+    # Variabili d'ambiente per Buildpacks (spesso necessarie per SSR)
+    env:
+      # Indica a Buildpacks di eseguire prima lo script 'build:ssr'
+      # e poi lo script 'serve' o 'start' per avviare il server.
+      # Assicurati che il tuo package.json abbia uno script 'start' o 'serve'
+      # che avvia il tuo server Node.js compilato.
+      # Ad esempio: "start": "node dist/azzurra-makeup-artist-fe/server/main.js"
+      - 'GOOGLE_NODE_RUN_SCRIPTS=build:ssr,serve:ssr' # <-- Questo è CRUCIALE per SSR
+                                                      # Utilizza il tuo "serve:ssr" script
+                                                      # definito nel package.json
 
 # Definisce le immagini che verranno create e salvate in Artifact Registry
+# Rimuovi l'immagine del frontend da qui, Buildpacks la gestirà automaticamente
 images:
 - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-backend-repo/azzurra-makeup-artist-backend'
-- 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend'
+# - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/azzurra-frontend-repo/azzurra-makeup-artist-frontend' # Rimosso/commentato
 
-# Definisce le sostituzioni per le variabili d'ambiente sensibili
-# Questi valori verranno configurati nel trigger di Cloud Build
-substitutions:
-  _MONGO_URI: 'mongodb+srv://aleksandernikollibusiness:FVjQJt29mxrE0ho3@clusterazzurra.cbgy999.mongodb.net/?retryWrites=true&w=majority&appName=ClusterAzzurra'
-  _EMAIL_USER: 'azzurraangius95@gmail.com'
-  _EMAIL_PASS: 'kpvjrfgybybpwycv' # Idealmente da Secret Manager
-  _EMAIL_DESTINATION: 'azzurraangius95@gmail.com'
-  _SITE_NAME: 'Azzurra Makeup Artist'
-  _CLOUDINARY_CLOUD_NAME: 'ddqilzddj'
-  _CLOUDINARY_API_KEY: '493947727933171'
-  _CLOUDINARY_API_SECRET: 'Ejnkvn9VPh1V5zZQALk9_dluyS0' # Idealmente da Secret Manager
-  _BACKEND_API_KEY: 'azzu-best-makeup-artist-241217dic' # Idealmente da Secret Manager
-
-# Opzioni di build per la gestione dei log
-options:
-  logging: CLOUD_LOGGING_ONLY # Invia i log solo a Cloud Logging
+# ... (rest of substitutions and options)
