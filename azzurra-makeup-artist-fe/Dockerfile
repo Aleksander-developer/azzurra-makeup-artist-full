@@ -28,16 +28,23 @@ RUN npx ng build --configuration=production --localize
 # Esegui la build del SERVER (SSR)
 RUN npx ng run azzurra-makeup-artist-fe:server:production
 
+# **** AGGIUNTO PER DEBUG CRUCIALE: ELENCA IL CONTENUTO DELLA CARTELLA 'dist' ****
+RUN ls -l dist/
+RUN ls -l dist/azzurra-makeup-artist-fe/
+RUN ls -l dist/azzurra-makeup-artist-fe/browser/
+RUN ls -l dist/azzurra-makeup-artist-fe/server/
+# *******************************************************************
+
 # Stage 2: Serve the application with a lightweight Node.js server
 FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
 # Copia il bundle del server SSR (main.js)
-COPY --from=builder /app/dist/azzurra-makeup-artist-fe/server/ ./
+COPY --from=builder /app/azzurra-makeup-artist-fe/dist/azzurra-makeup-artist-fe/server/ ./
 
 # Copia la cartella del browser buildata (necessaria per servire asset statici in SSR)
-COPY --from=builder /app/dist/azzurra-makeup-artist-fe/browser/ ./browser
+COPY --from=builder /app/azzurra-makeup-artist-fe/dist/azzurra-makeup-artist-fe/browser/ ./browser
 
 # Copia package.json e node_modules per il runtime
 COPY --from=builder /app/package.json ./
