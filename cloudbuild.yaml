@@ -45,8 +45,8 @@ steps:
     - 'run'
     - 'deploy'
     - 'azzurra-frontend'
-    - '--source' # <-- CAMBIATO: Punti alla cartella sorgente del frontend
-    - 'azzurra-makeup-artist-fe/' # <-- La cartella del tuo progetto Angular
+    - '--source'
+    - 'azzurra-makeup-artist-fe/'
     - '--platform'
     - 'managed'
     - '--region'
@@ -55,12 +55,11 @@ steps:
     - '--port'
     - '8080'
     - '--timeout'
-    - '300s' # Importante mantenere un timeout sufficiente per SSR
+    - '300s'
     - '--project'
     - '${PROJECT_ID}'
-
-    env:
-      - 'GOOGLE_NODE_RUN_SCRIPTS=build:ssr,serve:ssr' 
+  env: 
+    - 'GOOGLE_NODE_RUN_SCRIPTS=build:ssr,serve:ssr' # <--- QUESTA RIGA: Deve essere indentata di 2 spazi rispetto a 'env:'
 
 # Definisce le immagini che verranno create e salvate in Artifact Registry
 images:
