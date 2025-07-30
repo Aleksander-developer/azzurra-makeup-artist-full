@@ -1,17 +1,25 @@
 # .gcloudignore (nella radice del monorepo)
 
-# Ignora tutto di default
-*
+# Inizialmente non ignorare nulla
+!*
 
-# Ma includi esplicitamente le sottocartelle che ci interessano per la build corrente
-!azzurra-makeup-artist-backend/
-!azzurra-makeup-artist-backend/**
-!azzurra-makeup-artist-fe/
-!azzurra-makeup-artist-fe/**
-
-# Ignora i moduli di Node.js e le cartelle di build locali
+# Ora, ignora solo le cartelle di progetto che non devono mai essere caricate
 node_modules/
 dist/
-.env
 .git/
 .gitignore
+.env
+*.log
+*.md
+*.spec.ts
+*.sh
+.vscode/
+
+# Le righe !<subfolder>/** non sono necessarie se non ignori * inizialmente.
+# Semplicemente, i files dentro le sottocartelle del tuo monorepo verranno
+# caricati a meno che non siano specificamente esclusi dalle regole globali.
+
+# Se il problema persiste, e package.json/package-lock.json non sono inclusi:
+# Potrebbe essere necessario listare esplicitamente i package.json/package-lock.json
+# !azzurra-makeup-artist-fe/package.json
+# !azzurra-makeup-artist-fe/package-lock.json
