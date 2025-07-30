@@ -1,5 +1,5 @@
 # Stage 1: Build the Angular application
-FROM node:20-alpine AS builder
+FROM node:20 AS builder
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ RUN npm install
 COPY azzurra-makeup-artist-fe/. . 
 
 # Duplica server.ts dalla sua posizione in src/ alla root del WORKDIR (workaround)
-COPY azzurra-makeup-artist-fe/src/server.ts ./ 
+COPY azzurra-makeup-artist-fe/server.ts ./ 
 
 # Esegui la build del CLIENT (browser)
 RUN npx ng build --configuration=production --localize
@@ -41,7 +41,8 @@ FROM node:20-alpine
 WORKDIR /usr/src/app
 
 # Copia il bundle del server SSR (main.js)
-COPY --from=builder /app/azzurra-makeup-artist-fe/dist/azzurra-makeup-artist-fe/server/ ./
+COPY --from=builder /app/azzurra-makeup-artist-fe/dist/azzurra-makeup-artist-fe/server/ ./server
+
 
 # Copia la cartella del browser buildata (necessaria per servire asset statici in SSR)
 COPY --from=builder /app/azzurra-makeup-artist-fe/dist/azzurra-makeup-artist-fe/browser/ ./browser
