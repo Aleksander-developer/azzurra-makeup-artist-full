@@ -1,132 +1,48 @@
-// server.ts
+// src/server.ts
 
-// ✅ AGGIUNGI QUESTA RIGA ALL'INIZIO DEL FILE
-import '@angular/localize/init';
-
-import { APP_BASE_HREF } from '@angular/common';
-import { CommonEngine } from '@angular/ssr';
+// Rimuovi temporaneamente tutti gli import di Angular, CommonEngine, ecc.
+// Non avrai bisogno di import di Angular SSR per questo test minimale.
 import express from 'express';
 import { join } from 'node:path';
-import { LOCALE_ID } from '@angular/core';
+
+console.log('SERVER.TS: Starting minimal Express server...'); // Debug log 1
 
 export async function app(): Promise<express.Express> {
   const server = express();
 
-  const { AppServerModule } = await import('./main.server');
+  // Rimuovi temporaneamente tutta la logica di Angular SSR
+  // Non ci sarà nessun AppServerModule o CommonEngine per questo test.
 
-  // 🌍 Cartelle distribuzione (Cloud Run: /usr/src/app)
+  // Serve solo un file statico di prova per vedere se il server si avvia
   const currentDir = process.cwd();
-  const browserDistFolder = join(currentDir, 'browser');
-  const serverDistFolder = join(currentDir, 'server');
+  const testPublicFolder = join(currentDir, 'test_public'); // Creeremo questa cartella
 
-  if (process.env['NODE_ENV'] !== 'production') {
-    console.log('📁 currentDir:', currentDir);
-    console.log('📁 serverDistFolder:', serverDistFolder);
-    console.log('📁 browserDistFolder:', browserDistFolder);
-  }
+  server.use(express.static(testPublicFolder)); // Serve file statici da qui
 
-  const supportedLocales = ['it', 'en'];
-  const defaultLocale = 'it';
-
-  const commonEngine = new CommonEngine();
-  server.set('view engine', 'html');
-
-  // 🚀 Serve asset statici globali
-  server.use(express.static(browserDistFolder, {
-    maxAge: '1y',
-    setHeaders: (res, path) => {
-      if (path.endsWith('.html')) {
-        res.setHeader('Cache-Control', 'no-cache');
-      }
-    },
-  }));
-
-  // 🚀 Serve asset per ciascuna lingua
-  supportedLocales.forEach((locale) => {
-    const localePath = join(browserDistFolder, locale);
-    server.use(`/${locale}`, express.static(localePath, {
-      maxAge: '1y',
-      setHeaders: (res, path) => {
-        if (path.endsWith('.html')) {
-          res.setHeader('Cache-Control', 'no-cache');
-        }
-      },
-    }));
-  });
-
-  // 🔁 Funzione che esegue SSR per una lingua specifica
-  function renderLocale(locale: string) {
-    const localePath = join(browserDistFolder, locale);
-    const indexHtml = join(localePath, 'index.html');
-
-    server.get(`/${locale}*`, async (req, res, next) => {
-      try {
-        if (process.env['NODE_ENV'] !== 'production') {
-          console.log(`🔄 SSR rendering ${req.originalUrl} → ${indexHtml}`);
-        }
-
-        const html = await commonEngine.render({
-          bootstrap: AppServerModule,
-          documentFilePath: indexHtml,
-          url: req.originalUrl,
-          publicPath: localePath,
-          providers: [
-            { provide: APP_BASE_HREF, useValue: `/${locale}/` },
-            { provide: LOCALE_ID, useValue: locale },
-          ],
-        });
-
-        res.send(html);
-      } catch (err) {
-        console.error(`❌ SSR error for ${req.originalUrl}:`, err);
-        next(err);
-      }
-    });
-  }
-
-  // 🌐 Configura SSR per tutte le lingue supportate
-  supportedLocales.forEach(renderLocale);
-
-  // 🔁 Redirect root / alla lingua predefinita
   server.get('/', (req, res) => {
-    res.redirect(`/${defaultLocale}`);
+    res.send('Minimal Express server is running!'); // Messaggio di successo
   });
 
-  // ⚠️ Catch-all 404 con fallback SSR sulla lingua predefinita
-  server.get('*', async (req, res) => {
-    try {
-      const locale = defaultLocale;
-      const localePath = join(browserDistFolder, locale);
-      const indexHtml = join(localePath, 'index.html');
-
-      const html = await commonEngine.render({
-        bootstrap: AppServerModule,
-        documentFilePath: indexHtml,
-        url: req.originalUrl,
-        publicPath: localePath,
-        providers: [
-          { provide: APP_BASE_HREF, useValue: `/${locale}/` },
-          { provide: LOCALE_ID, useValue: locale },
-        ],
-      });
-
-      res.status(404).send(html);
-    } catch (err) {
-      console.error(`❌ Errore SSR 404 fallback:`, err);
-      res.status(404).send('Pagina non trovata');
-    }
-  });
-
+  console.log('SERVER.TS: Minimal Express server configured.'); // Debug log 2
   return server;
 }
 
 // ▶️ Avvio server
 async function run(): Promise<void> {
+  console.log('SERVER.TS: Starting run() function for minimal server...'); // Debug log 3
   const port = process.env['PORT'] || 8080;
-  const server = await app();
-  server.listen(port, () => {
-    console.log(`✅ Angular SSR multilingua avviato su http://localhost:${port}`);
-  });
+  try {
+    const server = await app();
+    server.listen(port, () => {
+      console.log(`✅ Minimal Express server avviato su http://localhost:${port}`); // Success log
+    });
+  } catch (error) {
+    console.error('SERVER.TS: ERROR during minimal server setup/listen:', error); // Debug log ERROR
+    process.exit(1);
+  }
 }
 
 run();
+console.log('SERVER.TS: run() function called for minimal server.'); // Debug log 4 
+
+

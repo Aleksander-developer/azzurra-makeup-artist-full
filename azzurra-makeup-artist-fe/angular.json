@@ -38,7 +38,8 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "server": "src/main.server.ts"
           },
           "configurations": {
             "production": {
@@ -71,23 +72,13 @@
           "configurations": {
             "production": {
               "buildTarget": "azzurra-makeup-artist-fe:build:production"
-            },
-            "development": {
-              "buildTarget": "azzurra-makeup-artist-fe:build:development"
-            },
-            "en": {
-              "buildTarget": "azzurra-makeup-artist-fe:build:development,en"
-            },
-            "it": {
-              "buildTarget": "azzurra-makeup-artist-fe:build:development,it"
             }
-          },
-          "defaultConfiguration": "development"
+          }
         },
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "dist/server",
+            "outputPath": "dist/azzurra-makeup-artist-fe/server",
             "main": "src/server.ts",
             "tsConfig": "tsconfig.server.json"
           },
@@ -137,12 +128,7 @@
     }
   },
 
-  "i18n": {
-    "sourceLocale": "it",
-    "locales": {
-      "en": "src/locale/messages.en.xlf"
-    }
-  },
+  
 
   "cli": {
     "analytics": false

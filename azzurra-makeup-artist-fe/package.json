@@ -11,8 +11,10 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "prebuild:ssr": "rm -rf dist/",
-    "build:ssr": "ng build --configuration=production --localize && ng run azzurra-makeup-artist-fe:server:production",
-    "serve:ssr": "node dist/azzurra-makeup-artist-fe/server/main.js"
+    "build:ssr": "echo 'Build process will be handled directly in Dockerfile'",
+    "serve:ssr": "node dist/azzurra-makeup-artist-fe/server/main.js",
+    "serve:ssr:azzurra-makeup-artist-fe": "node dist/azzurra-makeup-artist-fe/browser/server/server.mjs",
+    "serve:ssr:dev": "ng serve --hmr --open"
   },
   "dependencies": {
     "@angular/animations": "^18.2.0",
