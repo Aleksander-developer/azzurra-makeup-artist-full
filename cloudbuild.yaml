@@ -51,7 +51,7 @@ steps:
     - '--port'
     - '8080'
     - '--timeout'
-    - '300s'
+    - '900s'
     - '--project'
     - '${PROJECT_ID}'
 
